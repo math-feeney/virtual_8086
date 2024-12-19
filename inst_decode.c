@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+#define MAX_LINES 100
+#define MAX_LINE_LENGTH 256
 
 // create struct to represent the parts of an instruction
 typedef struct instruct
@@ -35,16 +39,19 @@ int main(int argc, char* argv[])
     FILE *fptr;
 
     //open file in read mode
-    fptr = fopen(file_input, "r"); 
+    fptr = fopen(file_input, "r");
 
-    // read file in
-    // currently just prints one character at a time from the file
-    // specified in the first argument from the cmd line arg
-    char file_raw[1000];
-    while(fgets(file_raw, 1000, fptr))
+    // check for file error
+    if(fptr == NULL)
     {
-        printf("%s", file_raw); // <- CONTINUE HERE I can't figure out how to make print the raw hex values
-    }
+        printf("Error opening file\n");
+        return 2;
+    } 
+
+
+
+
+
 
     char test_bin = 0b00001100;
 
