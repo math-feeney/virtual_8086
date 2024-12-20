@@ -49,10 +49,6 @@ int main(int argc, char* argv[])
     } 
 
 
-
-
-
-
     char test_bin = 0b00001100;
 
     //extract last 3 bits
