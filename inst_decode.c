@@ -17,9 +17,15 @@ typedef struct instruct
     char byte_1;
     char byte_2;
 };
+ 
 
 int main(int argc, char* argv[])
 {
+
+    // Just make a sample instruction now and deal with file I/O later
+    INST test_inst = 0b0000000111001000;
+    //this works, but think about if I should change to uint8 and 
+    // deal with each one at a time
 
     // make sure an argument was entered
     if(argc < 2)
