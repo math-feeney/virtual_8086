@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 // define type to store each instruction
-typedef uint16_t INST; // accounting for the 8086 16 bit register
+typedef uint8_t INST; // accounting for the 8086 16 bit register
 
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 256
@@ -14,18 +14,15 @@ typedef uint16_t INST; // accounting for the 8086 16 bit register
 // create struct to represent the parts of an instruction
 typedef struct instruct
 {
-    char byte_1;
-    char byte_2;
+    INST byte_1;
+    INST byte_2;
 };
  
-
 int main(int argc, char* argv[])
 {
 
     // Just make a sample instruction now and deal with file I/O later
-    INST test_inst = 0b0000000111001000;
-    //this works, but think about if I should change to uint8 and 
-    // deal with each one at a time
+    INST test_inst = 00000010;
 
     // make sure an argument was entered
     if(argc < 2)
@@ -57,19 +54,9 @@ int main(int argc, char* argv[])
         return 2;
     } 
 
-    char test_bin = 0b00001100;
-
-    //extract last 3 bits
-    char test_out = test_bin & 0b00000111;
-
-    // printf("%x\n", test_out);
-
-
     /*////////////////////////////////////////
     read file in and store each instruction
     *//////////////////////////////////////////
-
-    INST inst; //declare one line for now
 
     while(fread(&inst, sizeof(inst), 1, fptr) != 0)
     {
@@ -80,5 +67,5 @@ int main(int argc, char* argv[])
     // close file
     fclose(fptr);
 
-    return 0;
+    return 0;  
 }
