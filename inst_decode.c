@@ -18,7 +18,7 @@ typedef struct instruct
     INST byte_2;
 };
  
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
     // Just make a sample instruction now and deal with file I/O later
@@ -58,10 +58,16 @@ int main(int argc, char* argv[])
     read file in and store each instruction
     *//////////////////////////////////////////
 
-    while(fread(&inst, sizeof(inst), 1, fptr) != 0)
+
+    // create array to store instructions
+    INST instruct;
+
+    INST isntruct_dest[0];
+
+    while(fread(&instruct, sizeof(instruct), 1, fptr) != 0)
     {
-        /*write something in here to copy the instructions 
-        somewhere*/
+        
+      
     }
     
     // close file
