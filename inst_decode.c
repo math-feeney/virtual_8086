@@ -6,23 +6,15 @@
 #include <stdint.h>
 
 // define type to store each instruction
-typedef uint8_t INST; // accounting for the 8086 16 bit register
+typedef uint8_t INST;
 
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 256
 
-// create struct to represent the parts of an instruction
-typedef struct instruct
-{
-    INST byte_1;
-    INST byte_2;
-};
+// maybe make a struct to 
  
 int main(int argc, char *argv[])
 {
-
-    // Just make a sample instruction now and deal with file I/O later
-    INST test_inst = 00000010;
 
     // make sure an argument was entered
     if(argc < 2)
@@ -31,10 +23,6 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    // get file name from the cmd line arg 
-    char file_input[50];
-    strcpy(file_input, argv[1]); // maybe not necessary?
-
     printf("you have entered %d arguments\n", argc);
     for(int i = 0; i < argc; i++)
     {
@@ -45,7 +33,7 @@ int main(int argc, char *argv[])
     FILE *fptr;
 
     //open file in read mode
-    fptr = fopen(file_input, "rb"); // "rb" tells fopen to expect a binary file
+    fptr = fopen(argv[1], "rb"); // "rb" tells fopen to expect a binary file
 
     // check for file error
     if(fptr == NULL)
@@ -57,16 +45,19 @@ int main(int argc, char *argv[])
     /*////////////////////////////////////////
     read file in and store each instruction
     *//////////////////////////////////////////
-
-
-    // create array to store instructions
-    INST instruct;
-
-    INST isntruct_dest[0];
-
-    while(fread(&instruct, sizeof(instruct), 1, fptr) != 0)
+    
+    INST byte;
+  
+    // will need to make more but this is for first instruction
+    char inst_1[4]; // 3 letters plus NUL
+    
+    while(fread(&byte, sizeof(INST), 1, fptr) != 0)
     {
-        
+       if((byte & 11111100) == 0b10001000)
+       {
+        strcpy(inst_1, "MOV\0");// this of course only works once
+       } 
+       printf("match!\n"); // this is just to test
       
     }
     
