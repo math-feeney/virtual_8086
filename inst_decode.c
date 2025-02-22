@@ -56,8 +56,9 @@ int main(int argc, char *argv[])
        if((byte & 11111100) == 0b10001000)
        {
         strcpy(inst_1, "MOV\0");// this of course only works once
+        printf("match!\n"); // this is just to test
        } 
-       printf("match!\n"); // this is just to test
+       
       
     }
     
