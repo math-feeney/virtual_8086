@@ -15,20 +15,17 @@ typedef uint8_t INST;
  
 int main(int argc, char *argv[])
 {
-
     // make sure an argument was entered
     if(argc < 2)
     {
         printf("Must enter an input\n");
         return 1;
     }
-    
     printf("you have entered %d arguments\n", argc);
     for(int i = 0; i < argc; i++)
     {
         printf("%s\n", argv[i]);
     }
-
     // set up file for reading
     FILE *fptr;
 
@@ -41,7 +38,6 @@ int main(int argc, char *argv[])
         printf("Error opening file\n");
         return 2;
     } 
-
     /*////////////////////////////////////////
     read file in and store each instruction
     *//////////////////////////////////////////
@@ -58,12 +54,11 @@ int main(int argc, char *argv[])
         strcpy(inst_1, "MOV\0");// this of course only works once
         printf("match!\n"); // this is just to test
        } 
-       
-      
     }
-    
     // close file
     fclose(fptr);
 
+    printf("in mov: %s\n", inst_1);
+    
     return 0;  
 }
