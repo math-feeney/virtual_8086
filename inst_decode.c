@@ -1,17 +1,11 @@
 // mov instruction decode for computer enhance
+#include "header.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
-
-// define type to store each instruction
-typedef uint8_t INST;
 
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 256
 
-// maybe make a struct to 
+
  
 int main(int argc, char *argv[])
 {
@@ -46,10 +40,12 @@ int main(int argc, char *argv[])
   
     // will need to make more but this is for first instruction
     char inst_1[4]; // 3 letters plus NUL
-    
+   
+       
+
     while(fread(&byte, sizeof(INST), 1, fptr) != 0)
     {
-       if((byte & 11111100) == 0b10001000)
+       if(get_instruction(byte) == MOV)
        {
         strcpy(inst_1, "MOV\0");// this of course only works once
         printf("match!\n"); // this is just to test
@@ -58,7 +54,7 @@ int main(int argc, char *argv[])
     // close file
     fclose(fptr);
 
-    printf("in mov: %s\n", inst_1);
+    printf("in mov: %x\n", MOV);
     
     return 0;  
 }
