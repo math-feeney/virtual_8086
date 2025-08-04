@@ -8,8 +8,8 @@
   #ifndef INST_KEY_H
   #define INST_KEY_H
     typedef enum {
-        MOV = 0b10001000,
-        OTH = 0b00000000
+        MOV = 0b0000000010001000,
+        OTH = 0b0000000000000000
 
     };
 
