@@ -37,20 +37,22 @@ int main(int argc, char *argv[])
     INST byte;
   
     // will need to make more but this is for first instruction
-    char inst_1[4]; // 3 letters plus NUL
-    //char l_arg[3]; // 2 plus NUL for both register letters
-    //char r_arg[3];
+    char inst_out[4]; // 3 letters plus NUL
+    char left_operand[3]; // 2 plus NUL for both register letters
+    char right_operand[3];
    
     while(fread(&byte, sizeof(INST), 1, fptr) != 0)
-    {
+    {  
+       //copy the correct string into the inst_out array based on opcode value in input byte 
+       match_instruction(get_instruction(byte), inst_out); 
+        
        printf("%x\n", get_instruction(byte)); 
        if(get_instruction(byte) == MOV)
        {
-        strcpy(inst_1, "MOV");// this of course only works once
+        //strcpy(inst_1, "MOV");// this of course only works once
         printf("match!\n");
-        printf("This should say MOV: %s", inst_1); // this is just to test
+        printf("This should say MOV: %s", inst_out); // this is just to test
        }
-       printf("%s\n", "test"); 
     }
     // close file
     fclose(fptr);

@@ -3,10 +3,10 @@
 #include "functions.h"
 
 // PAY ATTENTION TO ENDIANNESS!!!!!!!!!!!!!
-INST get_instruction(INST instruct)
+INST get_instruction(INST opcode)
 {
     // apply bit mask
-    return instruct & 0b0000000011111100;
+    return opcode & 0b0000000011111100;
 }
 
 // whether d bit is 1
@@ -22,18 +22,19 @@ bool is_w(INST instruct)
     //apply bit mask
     return instruct & 0b0000000000000001;    
 }
-/* 
-//code instruction to correct string
-char inst_str[4](INST instruct)
+ 
+// copy the correct instruction into the buffer created for the output instruction
+void match_instruction(INST opcode, char *inst_out)
 {
-    switch (expression) // **** FIGURE OUT HOW TO USE THIS TO ASSIGN ACTUAL STRINGS
+    switch (opcode) // **** FIGURE OUT HOW TO USE THIS TO ASSIGN ACTUAL STRINGS
     {
-    case constant expression:
-        /// code 
+    case MOV:
+        /// code
+        strcpy(inst_out, "MOV\n");
         break;
     
     default:
         break;
     } 
 }
-    */
+    
