@@ -1,7 +1,7 @@
-// function to get instruction (first 6 bits)
-#include "header.h"
+// function to get opcode (first 6 bits)
+#include "functions.h"
 
-INST get_instruction(INST instruct)
+INST get_opcode(INST instruct)
 {
     // apply bit mask
     return instruct & 0b11111100;

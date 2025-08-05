@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     while(fread(&byte, sizeof(INST), 1, fptr) != 0)
     {
-       if(get_instruction(byte) == MOV)
+       if(get_opcode(byte) == MOV)
        {
         strcpy(inst_1, "MOV\0");// this of course only works once
         printf("match!\n"); // this is just to test
