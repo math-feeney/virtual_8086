@@ -1,12 +1,10 @@
 // mov instruction decode for computer enhance
-#include "header.h"
-
+#include "inst_key.h"
+#include "functions.h"
 
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 256
 
-
- 
 int main(int argc, char *argv[])
 {
     // make sure an argument was entered
@@ -40,21 +38,43 @@ int main(int argc, char *argv[])
   
     // will need to make more but this is for first instruction
     char inst_1[4]; // 3 letters plus NUL
+    //char l_arg[3]; // 2 plus NUL for both register letters
+    //char r_arg[3];
    
-       
-
     while(fread(&byte, sizeof(INST), 1, fptr) != 0)
     {
-       if(get_opcode(byte) == MOV)
+       printf("%x\n", get_instruction(byte)); 
+       if(get_instruction(byte) == MOV)
        {
-        strcpy(inst_1, "MOV\0");// this of course only works once
-        printf("match!\n"); // this is just to test
-       } 
+        strcpy(inst_1, "MOV");// this of course only works once
+        printf("match!\n");
+        printf("This should say MOV: %s", inst_1); // this is just to test
+       }
+       printf("%s\n", "test"); 
     }
     // close file
     fclose(fptr);
 
     printf("in mov: %x\n", MOV);
-    
+
+    if(is_d)
+    {
+        printf("d is 1\n");
+    }
+
+    else
+        printf("d is 0\n");
+
+    // correctly assign relevant variables
+
+    //l_arg
+
+    /*/////////////////////////////////
+    Print dissasembly 
+    ////////////////////////////////*/
+   
+    //printf("Output:\n %s %s, %s\n", );
+
+
     return 0;  
 }
