@@ -45,6 +45,25 @@ int main(int argc, char *argv[])
     {  
        //copy the correct string into the inst_out array based on opcode value in input byte 
        match_instruction(get_instruction(byte), inst_out); 
+
+       //NEXT NEED TO COPY THE RIGHT PARTS INTO LEFT AND RIGHT
+       // SOMETHING LIKE:
+       /*
+        if(is_d(byte))
+        {
+            match_reg(get_reg(byte, left_operand));
+            match_regmem(get_regmem(byte, right_operand)); <- double check this is targeting the right field
+        }
+
+        // else flip left and right operand
+        else
+        {
+            match_reg(get_reg(byte, right_operand));
+            match_regmem(get_regmem(byte, left_operand)); <- double check this is targeting the right field
+ 
+        }
+
+       */
         
        printf("%x\n", get_instruction(byte)); 
        if(get_instruction(byte) == MOV)

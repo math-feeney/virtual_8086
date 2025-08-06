@@ -1,12 +1,18 @@
-// function to get instruction (first 6 bits)
 #include "inst_key.h"
 #include "functions.h"
 
 // PAY ATTENTION TO ENDIANNESS!!!!!!!!!!!!!
-INST get_instruction(INST opcode)
+// function to get instruction (first 6 bits)
+INST get_instruction(INST instruct)
 {
     // apply bit mask
-    return opcode & 0b0000000011111100;
+    return instruct & 0b0000000011111100;
+}
+
+// get w-bit plus reg (bits 8, 11-13) 
+INST get_reg(INST instruct)
+{
+    return instruct & 0b0011100000000001;
 }
 
 // whether d bit is 1
@@ -37,4 +43,6 @@ void match_instruction(INST opcode, char *inst_out)
         break;
     } 
 }
+
+
     

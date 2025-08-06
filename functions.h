@@ -14,6 +14,7 @@ typedef uint16_t INST;
 
 // declare function to get instruction (first 6 bits)
 INST get_instruction(INST instruct);
+INST get_reg(INST instruct);
 void match_instruction(INST opcode, char *inst_out);
 
 // d and w bit instructions
