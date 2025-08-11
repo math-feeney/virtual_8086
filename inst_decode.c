@@ -47,48 +47,35 @@ int main(int argc, char *argv[])
        match_instruction(get_instruction(byte), inst_out); 
 
        //NEXT NEED TO COPY THE RIGHT PARTS INTO LEFT AND RIGHT
-       // SOMETHING LIKE:
-       /*
         if(is_d(byte))
         {
-            match_reg(get_reg(byte, left_operand));
-            match_regmem(get_regmem(byte, right_operand)); <- double check this is targeting the right field
+            match_register(get_reg(byte), left_operand);
+            match_register(get_regmem(byte, is_w(byte)), right_operand); 
         }
 
         // else flip left and right operand
         else
         {
-            match_reg(get_reg(byte, right_operand));
-            match_regmem(get_regmem(byte, left_operand)); <- double check this is targeting the right field
+            match_register(get_reg(byte), right_operand);
+            match_register(get_regmem(byte, is_w(byte)), left_operand); 
  
         }
-
-       */
         
-       printf("%x\n", get_instruction(byte)); 
-       if(get_instruction(byte) == MOV)
-       {
-        //strcpy(inst_1, "MOV");// this of course only works once
-        printf("match!\n");
-        printf("This should say MOV: %s", inst_out); // this is just to test
-       }
+       printf("%s %s, %s\n", inst_out, left_operand, right_operand);
+    
+    /* //FOR DEBUGGING //////////////////////////
+
+     printf("actual value of binary: %x\n", byte);
+    printf("get_reg :  %x\n", get_reg(byte));
+    printf("get_regmem : %02x\n", get_regmem(byte, is_w(byte)));
+    printf("is_d : %x\n", is_d(byte));
+
+    //////////////////////////////////////////////////
+    */
+   
     }
     // close file
     fclose(fptr);
-
-    printf("in mov: %x\n", MOV);
-
-    if(is_d)
-    {
-        printf("d is 1\n");
-    }
-
-    else
-        printf("d is 0\n");
-
-    // correctly assign relevant variables
-
-    //l_arg
 
     /*/////////////////////////////////
     Print dissasembly 
@@ -97,5 +84,5 @@ int main(int argc, char *argv[])
     //printf("Output:\n %s %s, %s\n", );
 
 
-    return 0;  
+    return 0;
 }
