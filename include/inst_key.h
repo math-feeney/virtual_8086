@@ -7,7 +7,7 @@
   
   #ifndef INST_KEY_H
   #define INST_KEY_H
-    typedef enum {
+    enum {
         MOV = 0b0000000010001000,
         OTH = 0b0000000000000000
 
@@ -15,7 +15,7 @@
 
     // ENUM for the REG field encoding key
     // NOTE: This includes the W-bit (bit-8)
-    typedef enum {
+    enum {
       AL = 0b0000000000000000,
       CL = 0b0000100000000000,
       DL = 0b0001000000000000,
