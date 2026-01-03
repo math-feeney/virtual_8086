@@ -26,16 +26,16 @@ int CloseFileRead(int fd)
     return 0;
 }
 
-int ReadInstFromFile(int file_id, INST *buffer)
+int ReadInstFromFile(int file_id, BYTE *buffer)
 {
-    if(!read(file_id, buffer, sizeof(INST)))
+    if(!read(file_id, buffer, sizeof(BYTE)))
     {
         // end of file reached i think 
         return 0;
     }
     // return bytes read for now
-    // which we assume is 2
-    return 2;
+    // which we assume is 1
+    return 1;
 }
 
 #endif

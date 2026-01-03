@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     read file in and store each instruction
     *//////////////////////////////////////////
     
-    INST inst;
+    BYTE inst;
   
     // Get file descriptor for linux
     // TODO: figure out how to make portable
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     {
         printf("DEBUG SUCCESSFULLY READ SOMETHING!\n");
         printf("%04x\n", inst);
-        inst = be16toh()
+        inst = be16toh(inst);
         uint8_t hi = 
         printf("Low Byte(assuming little endian): %02x\n", (inst & 0xFF00) >> 8);
         printf("High Byte(assuming little endian): %02x\n", (inst & 0x00FF));
