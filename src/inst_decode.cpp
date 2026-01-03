@@ -23,7 +23,8 @@ int main(int argc, char *argv[])
     read file in and store each instruction
     *//////////////////////////////////////////
     
-    BYTE inst;
+    BYTE byte;
+    asm_inst full_inst;
   
     // Get file descriptor for linux
     // TODO: figure out how to make portable
@@ -35,15 +36,67 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    while(ReadInstFromFile(file_id, &inst))
+    // Get instruction ////////////////////////
+    /////////////////////////////////////////
+    while(ReadInstFromFile(file_id, &byte))
     {
-        printf("DEBUG SUCCESSFULLY READ SOMETHING!\n");
-        printf("%04x\n", inst);
-        inst = be16toh(inst);
-        uint8_t hi = 
-        printf("Low Byte(assuming little endian): %02x\n", (inst & 0xFF00) >> 8);
-        printf("High Byte(assuming little endian): %02x\n", (inst & 0x00FF));
+        static uint8_t byte_number = 1;
+        bool is_w = 0;
+        bool is_d = 0;
+        uint8_t mod_field;
+        uint8_t rm_field;
+        uint8_t src_field;
+        uint8_t dest_field;
+
+        if(byte_number == 1)
+        {
+            // check opcode first
+            switch(byte & OPCODE)
+            {
+                case REGMEM_TF_REG:
+                {
+                    strcpy(full_inst.instruct, "MOV\0"); 
+                } break; // not sure yet if we need to keep this break
+
+            }
+
+            is_w = byte & W_BIT;
+            is_d = byte & D_BIT;
+
+            byte_number++;
+        }
+
+        if(byte_number == 2)
+        {
+            mod_field = byte & MOD_FIELD;
+            rm_field = byte & RM_FIELD;
+
+            // d == 0: source is specified in REG field
+            // d == 1: dest is specified in REG field
+            if(mod_field == REG_MOD)
+            {
+                if(is_d)
+                {
+                    src_field = (byte & REG_FIELD) >> 3;
+                    dest_field = (byte & RM_FIELD);
+                }
+                else
+                {
+                    src_field = (byte & RM_FIELD);
+                    dest_field = (byte & REG_FIELD) >> 3;
+                }
+
+                RR_GetReg(&full_inst, src_field, dest_field, is_w); 
+                    
+            }
+        }
+
     }
+
+    // Do Something with instruction //////////
+    //////////////////////////////////////////
+
+
   /* 
     /////////////////////////////////////
     while(fread(file_id, sizeof(INST), 1, fptr) != 0)

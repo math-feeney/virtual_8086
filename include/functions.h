@@ -3,17 +3,6 @@
 
 #include "header.h"
 
-// declare function to get instruction (first 6 bits)
-INST get_instruction(INST instruct);
-INST get_reg(INST instruct);
-INST get_regmem(INST instruct, bool is_w);
-
-void match_instruction(INST instruct, char *inst_out);
-void match_register(INST instruct, char *operand);
-
-
-// d and w bit instructions
-bool is_d(INST instruct);
-bool is_w(INST instruct);
+void RR_GetReg(asm_inst* full_inst, uint8_t src_field, uint8_t dest_field, bool is_w); 
 
 #endif
