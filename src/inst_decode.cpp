@@ -87,8 +87,12 @@ int main(int argc, char *argv[])
                 }
 
                 RR_GetReg(&full_inst, src_field, dest_field, is_w); 
-                    
+
+                // Register mode tells us this is the last byte
+                printf("%s %s, %s\n", full_inst.instruct, full_inst.operand_1, full_inst.operand_2);
+                continue; 
             }
+
         }
 
     }
