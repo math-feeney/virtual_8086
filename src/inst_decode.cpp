@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Get instruction ////////////////////////
+    // Decode instruction ////////////////////////
     /////////////////////////////////////////
     while(ReadInstFromFile(file_id, &byte))
     {
@@ -95,6 +95,10 @@ int main(int argc, char *argv[])
 
         }
 
+        // Should not reach this point in the loop
+        // means that we don't know whether we are on the last byte
+        printf("Something went wrong:\n"); 
+        printf(" Reached end of instruction decode loop\n");
     }
 
     // close file
