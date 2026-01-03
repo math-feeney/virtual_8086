@@ -63,15 +63,15 @@ int main(int argc, char *argv[])
         
        printf("%s %s, %s\n", inst_out, left_operand, right_operand);
     
-    /* //FOR DEBUGGING //////////////////////////
+     //FOR DEBUGGING //////////////////////////
 
      printf("actual value of binary: %x\n", byte);
-    printf("get_reg :  %x\n", get_reg(byte));
-    printf("get_regmem : %02x\n", get_regmem(byte, is_w(byte)));
-    printf("is_d : %x\n", is_d(byte));
+    //printf("get_reg :  %x\n", get_reg(byte));
+    //printf("get_regmem : %02x\n", get_regmem(byte, is_w(byte)));
+    //printf("is_d : %x\n", is_d(byte));
 
     //////////////////////////////////////////////////
-    */
+    
    
     }
     // close file
