@@ -1,6 +1,7 @@
 // mov instruction decode for computer enhance
-#include "inst_key.h"
+#include "header.h"
 #include "functions.h"
+#include "linux_header.h"
 
 #define MAX_LINES 100
 #define MAX_LINE_LENGTH 256
@@ -18,65 +19,74 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", argv[i]);
     }
-    // set up file for reading
-    FILE *fptr;
-
-    //open file in read mode
-    fptr = fopen(argv[1], "rb"); // "rb" tells fopen to expect a binary file
-
-    // check for file error
-    if(fptr == NULL)
-    {
-        printf("Error opening file\n");
-        return 2;
-    } 
     /*////////////////////////////////////////
     read file in and store each instruction
     *//////////////////////////////////////////
     
-    INST byte;
+    INST inst;
   
-    // will need to make more but this is for first instruction
-    char inst_out[4]; // 3 letters plus NUL
-    char left_operand[3]; // 2 plus NUL for both register letters
-    char right_operand[3];
-   
-    while(fread(&byte, sizeof(INST), 1, fptr) != 0)
+    // Get file descriptor for linux
+    // TODO: figure out how to make portable
+    int file_id;
+    file_id = OpenFileRead(argv[1]);
+    if(!file_id)
+    {
+        printf("Error opening file\n");
+        return 0;
+    }
+
+    while(ReadInstFromFile(file_id, &inst))
+    {
+        printf("DEBUG SUCCESSFULLY READ SOMETHING!\n");
+        printf("%04x\n", inst);
+        inst = be16toh()
+        uint8_t hi = 
+        printf("Low Byte(assuming little endian): %02x\n", (inst & 0xFF00) >> 8);
+        printf("High Byte(assuming little endian): %02x\n", (inst & 0x00FF));
+    }
+  /* 
+    /////////////////////////////////////
+    while(fread(file_id, sizeof(INST), 1, fptr) != 0)
     {  
        //copy the correct string into the inst_out array based on opcode value in input byte 
-       match_instruction(get_instruction(byte), inst_out); 
+       match_instruction(get_instruction(inst), inst_out); 
 
        //NEXT NEED TO COPY THE RIGHT PARTS INTO LEFT AND RIGHT
-        if(is_d(byte))
+        if(is_d(inst))
         {
-            match_register(get_reg(byte), left_operand);
-            match_register(get_regmem(byte, is_w(byte)), right_operand); 
+            match_register(get_reg(inst), left_operand);
+            match_register(get_regmem(inst, is_w(inst)), right_operand); 
         }
 
         // else flip left and right operand
         else
         {
-            match_register(get_reg(byte), right_operand);
-            match_register(get_regmem(byte, is_w(byte)), left_operand); 
+            match_register(get_reg(inst), right_operand);
+            match_register(get_regmem(inst, is_w(inst)), left_operand); 
  
         }
         
        printf("%s %s, %s\n", inst_out, left_operand, right_operand);
-    
+*/
      //FOR DEBUGGING //////////////////////////
 
-     printf("actual value of binary: %x\n", byte);
-    //printf("get_reg :  %x\n", get_reg(byte));
-    //printf("get_regmem : %02x\n", get_regmem(byte, is_w(byte)));
-    //printf("is_d : %x\n", is_d(byte));
+    // printf("actual value of binary: %x\n", inst);
+    // printf("get_reg :  %x\n", get_reg(inst));
+    // printf("get_regmem : %02x\n", get_regmem(inst, is_w(byte)));
+    // printf("is_d : %x\n", is_d(byte));
 
     //////////////////////////////////////////////////
     
    
-    }
-    // close file
-    fclose(fptr);
 
+    // close file
+    // returns nonzero on error
+    // TODO: try to standardize this return value maybe
+    if(CloseFileRead(file_id) == -1)
+    {
+        printf("Error closing file\n");
+        return 1;
+    }
     /*/////////////////////////////////
     Print dissasembly 
     ////////////////////////////////*/

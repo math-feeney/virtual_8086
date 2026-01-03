@@ -1,3 +1,13 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <endian.h> // TODO: is this standard or only glibc?
+
+// define type to store each instruction
+typedef uint16_t INST;
+
 // Includes key for 8086 instruction set
 
 /*instruction key:
