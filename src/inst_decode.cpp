@@ -41,15 +41,14 @@ int main(int argc, char *argv[])
     while(ReadInstFromFile(file_id, &byte))
     {
         static uint8_t byte_number = 1;
-        bool is_w = 0;
-        bool is_d = 0;
-        uint8_t mod_field;
-        uint8_t rm_field;
-        uint8_t src_field;
-        uint8_t dest_field;
+        static bool is_d = 0;
+        static bool is_w = 0;
+        static uint8_t mod_field, rm_field;
+        static uint8_t src_field, dest_field;
 
         if(byte_number == 1)
         {
+            // reset relevant values on first byte
             // check opcode first
             switch(byte & OPCODE)
             {
@@ -64,6 +63,7 @@ int main(int argc, char *argv[])
             is_d = byte & D_BIT;
 
             byte_number++;
+            continue;
         }
 
         if(byte_number == 2)
@@ -77,28 +77,26 @@ int main(int argc, char *argv[])
             {
                 if(is_d)
                 {
-                    src_field = (byte & REG_FIELD) >> 3;
-                    dest_field = (byte & RM_FIELD);
+                    dest_field = (byte & REG_FIELD) >> 3;
+                    src_field = (byte & RM_FIELD);
+                    
                 }
                 else
                 {
-                    src_field = (byte & RM_FIELD);
-                    dest_field = (byte & REG_FIELD) >> 3;
+                    dest_field = (byte & RM_FIELD);
+                    src_field = (byte & REG_FIELD) >> 3;
                 }
 
                 RR_GetReg(&full_inst, src_field, dest_field, is_w); 
 
                 // Register mode tells us this is the last byte
                 printf("%s %s, %s\n", full_inst.instruct, full_inst.operand_1, full_inst.operand_2);
+                byte_number = 1;
                 continue; 
             }
 
         }
 
-        // Should not reach this point in the loop
-        // means that we don't know whether we are on the last byte
-        printf("Something went wrong:\n"); 
-        printf(" Reached end of instruction decode loop\n");
     }
 
     // close file
