@@ -22,9 +22,26 @@ typedef uint8_t BYTE;
 #define REG_FIELD 0b00111000
 #define RM_FIELD  0b00000111
 
-// Macros for OPCODE field
-#define REGMEM_TF_REG 0b10001000
-// TODO: add more as needed
+// Macros for getting opcode
+// note: these are just for internal
+// use and unrelated to the 8086 ISA 
+
+// MOV instructions: X & 0b11110000 == 0b00010000
+#define MOV 0x01
+
+#define REGMEM_TF_REG 0x0101
+#define IM_T_REGMEM   0x0102
+#define IM_T_REG      0x0103
+#define MEM_T_ACC     0x0104
+#define ACC_T_MEM     0x0105
+#define REGMEM_T_SEG  0x0106
+#define SEG_T_REGMEM  0x0107
+
+// PUSH instructions:
+#define PUSH 0x02
+
+#define P_REGMEM 0x0201
+// ADD MORE HERE ///////////
 
 // Macros for MOD field
 #define MEM_MOD    0b00000000
@@ -59,10 +76,9 @@ typedef uint8_t BYTE;
 // struct for asm instructions
 struct asm_inst
 {
-  char instruct[4];
+  char instruct[5];
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
 };
-
 
 #endif

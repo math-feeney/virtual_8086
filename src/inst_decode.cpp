@@ -45,29 +45,57 @@ int main(int argc, char *argv[])
         static bool is_w = 0;
         static uint8_t mod_field, rm_field;
         static uint8_t src_field, dest_field;
+        static uint16_t opcode;
 
         if(byte_number == 1)
         {
-            // reset relevant values on first byte
-            // check opcode first
-            switch(byte & OPCODE)
+            opcode = GetOpcode(byte);
+            if(!opcode) 
+            {
+                printf("Error: Matching opcode not found in byte %u\n", byte_number);
+                printf("byte: %02x\n", byte);
+                return 1;
+            }
+            
+            // the high order byte of opcode indicates instruction
+            switch(opcode >> 8)
+            {
+                case MOV:
+                {
+                    strcpy(full_inst.instruct, "MOV\0"); 
+                } break;
+
+                case PUSH:
+                {
+                    strcpy(full_inst.instruct, "PUSH\0");
+                } break;
+            }
+            switch(opcode)
             {
                 case REGMEM_TF_REG:
                 {
-                    strcpy(full_inst.instruct, "MOV\0"); 
-                } break; // not sure yet if we need to keep this break
+                    is_d = byte & 0b00000010;   
+                    is_w = byte & 0b00000001;
+                } break;
 
+                case IM_T_REGMEM:
+                {
+                    is_w = byte & 0b00000001;
+                } break;
+                // Continue here: 
+                // add IM_T_REG Opcode
+                ///////////////////////////////////////////////////////////////////////////////////
             }
-
-            is_w = byte & W_BIT;
-            is_d = byte & D_BIT;
-
             byte_number++;
             continue;
         }
 
         if(byte_number == 2)
         {
+            // TODO: everything in this byte 2 section
+            // still assumes REGMEM_TF_REG
+            // i.e. MOD-REG-RM
+            // will need to adjust for different opcodes
             mod_field = byte & MOD_FIELD;
             rm_field = byte & RM_FIELD;
 
