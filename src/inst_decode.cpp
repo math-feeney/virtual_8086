@@ -43,13 +43,15 @@ int main(int argc, char *argv[])
         static uint8_t byte_number = 1;
         static bool is_d = 0;
         static bool is_w = 0;
-        static uint8_t mod_field, rm_field;
-        static uint8_t src_field, dest_field;
+        static uint8_t mod_field, reg_field, rm_field;
+        static uint8_t instruction, src_field, dest_field;
         static uint16_t opcode;
 
         if(byte_number == 1)
         {
             opcode = GetOpcode(byte);
+            instruction = (uint8_t)(opcode >> 8); //the high order byte indicates instruction
+
             if(!opcode) 
             {
                 printf("Error: Matching opcode not found in byte %u\n", byte_number);
@@ -57,8 +59,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
             
-            // the high order byte of opcode indicates instruction
-            switch(opcode >> 8)
+            switch(instruction)
             {
                 case MOV:
                 {
@@ -82,9 +83,12 @@ int main(int argc, char *argv[])
                 {
                     is_w = byte & 0b00000001;
                 } break;
-                // Continue here: 
-                // add IM_T_REG Opcode
-                ///////////////////////////////////////////////////////////////////////////////////
+
+                case IM_T_REG:
+                {
+                    is_w = byte & 0b00001000;
+                    reg_field = byte & 0b00000111;                    
+                } break;
             }
             byte_number++;
             continue;
@@ -92,39 +96,49 @@ int main(int argc, char *argv[])
 
         if(byte_number == 2)
         {
-            // TODO: everything in this byte 2 section
-            // still assumes REGMEM_TF_REG
-            // i.e. MOD-REG-RM
-            // will need to adjust for different opcodes
-            mod_field = byte & MOD_FIELD;
-            rm_field = byte & RM_FIELD;
-
-            // d == 0: source is specified in REG field
-            // d == 1: dest is specified in REG field
-            if(mod_field == REG_MOD)
+            switch(opcode)
             {
-                if(is_d)
+                case REGMEM_TF_REG:
                 {
-                    dest_field = (byte & REG_FIELD) >> 3;
-                    src_field = (byte & RM_FIELD);
-                    
-                }
-                else
+                    mod_field = (byte & 0b11000000) >> 6;
+                    reg_field = (byte & 0b00111000) >> 3;
+
+                    // d == 0: source is specified in REG field
+                    // d == 1: dest is specified in REG field
+                    if(mod_field == REG_MOD)
+                    {
+                        if(is_d)
+                        {
+                            dest_field = (byte & REG_FIELD) >> 3;
+                            src_field = (byte & RM_FIELD);
+                        }
+                        else
+                        {
+                            dest_field = (byte & RM_FIELD);
+                            src_field = (byte & REG_FIELD) >> 3;
+                        }
+
+                        RR_GetReg(&full_inst, src_field, dest_field, is_w); 
+
+                        // Register mode tells us this is the last byte
+                        printf("%s %s, %s\n", full_inst.instruct, full_inst.operand_1, full_inst.operand_2);
+                        byte_number = 1;
+                        continue; 
+                    }
+                } break;
+
+                case IM_T_REGMEM:
                 {
-                    dest_field = (byte & RM_FIELD);
-                    src_field = (byte & REG_FIELD) >> 3;
-                }
+                    // START HERE KEEP FILLING IN THIS
+                    // MAYBE AFTER CHAPTER 2 VIDEO
+                } break;
 
-                RR_GetReg(&full_inst, src_field, dest_field, is_w); 
+                case IM_T_REG:
+                {
 
-                // Register mode tells us this is the last byte
-                printf("%s %s, %s\n", full_inst.instruct, full_inst.operand_1, full_inst.operand_2);
-                byte_number = 1;
-                continue; 
+                } break;
             }
-
         }
-
     }
 
     // close file

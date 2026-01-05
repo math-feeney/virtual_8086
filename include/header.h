@@ -44,10 +44,12 @@ typedef uint8_t BYTE;
 // ADD MORE HERE ///////////
 
 // Macros for MOD field
-#define MEM_MOD    0b00000000
-#define MEM_MOD_8  0b01000000
-#define MEM_MOD_16 0b10000000
-#define REG_MOD    0b11000000
+// NOTE: assumes bit shifted to 
+// lowest two bits
+#define MEM_MOD    0x00
+#define MEM_MOD_8  0x01
+#define MEM_MOD_16 0x02
+#define REG_MOD    0x03
 
 ////////////////////////
 // Macros for Registers
