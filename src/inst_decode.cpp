@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
         {
             switch(opcode)
             {
+                // eg MOV AX, CX
                 case REGMEM_TF_REG:
                 {
                     mod_field = (byte & 0b11000000) >> 6;
@@ -109,15 +110,17 @@ int main(int argc, char *argv[])
                     {
                         if(is_d)
                         {
-                            dest_field = (byte & REG_FIELD) >> 3;
-                            src_field = (byte & RM_FIELD);
+                            dest_field = (byte & 0b00111000) >> 3;
+                            src_field = (byte & 0b00000111);
                         }
                         else
                         {
-                            dest_field = (byte & RM_FIELD);
-                            src_field = (byte & REG_FIELD) >> 3;
+                            dest_field = (byte & 0b00000111);
+                            src_field = (byte & 0b00111000) >> 3;
                         }
 
+                        // TODO: this might actually be more generalizable
+                        // to other instructions types
                         RR_GetReg(&full_inst, src_field, dest_field, is_w); 
 
                         // Register mode tells us this is the last byte
@@ -125,6 +128,7 @@ int main(int argc, char *argv[])
                         byte_number = 1;
                         continue; 
                     }
+                    // TODO: add else ifs for when mod field is 00, 01, 10
                 } break;
 
                 case IM_T_REGMEM:
