@@ -40,6 +40,17 @@ int main(int argc, char *argv[])
     /////////////////////////////////////////
     while(ReadInstFromFile(file_id, &byte))
     {
+        // Prototype /////////////////////////
+        // START HERE: think more about using this approach
+        // the idea is to run separate functions for each byte
+        // passing the opcode(by value) and this below struct
+        // (byte reference) to either use or get the relevant codes
+        // maybe the return value signifies whether or not 
+        // we will need to read another byte or are done
+        // and should continue; the while loop.
+        static bin_codes_t bin_codes; 
+        ////////////////////////////////////
+
         static uint8_t byte_number = 1;
         static bool is_d = 0;
         static bool is_w = 0;
@@ -86,6 +97,9 @@ int main(int argc, char *argv[])
 
                 case IM_T_REG:
                 {
+
+                    // PROTOTYPE: HandleByte1(Opcode, )
+
                     is_w = byte & 0b00001000;
                     reg_field = byte & 0b00000111;                    
                 } break;
@@ -139,7 +153,6 @@ int main(int argc, char *argv[])
 
                 case IM_T_REG:
                 {
-
                 } break;
             }
         }

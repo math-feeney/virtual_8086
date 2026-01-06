@@ -75,6 +75,17 @@ typedef uint8_t BYTE;
 // Structs
 /////////////////////////////////
 
+// Possible struct for binary code values eg mod/reg/rm
+struct bin_codes_t
+{
+  uint8_t d_bit;
+  uint8_t w_bit;
+  uint8_t mod_bits;
+  uint8_t reg_bits;
+  uint8_t rm_bits;
+  // TODO: maybe add more here
+};
+
 // struct for asm instructions
 struct asm_inst
 {
