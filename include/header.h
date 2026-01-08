@@ -83,7 +83,8 @@ struct bin_codes_t
   uint8_t mod_bits;
   uint8_t reg_bits;
   uint8_t rm_bits;
-  // TODO: maybe add more here
+  uint8_t src_bits;
+  uint8_t dest_bits;
 };
 
 // struct for asm instructions

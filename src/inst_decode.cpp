@@ -40,26 +40,29 @@ int main(int argc, char *argv[])
     /////////////////////////////////////////
     while(ReadInstFromFile(file_id, &byte))
     {
-        // Prototype /////////////////////////
-        // START HERE: think more about using this approach
-        // the idea is to run separate functions for each byte
-        // passing the opcode(by value) and this below struct
-        // (byte reference) to either use or get the relevant codes
-        // maybe the return value signifies whether or not 
-        // we will need to read another byte or are done
-        // and should continue; the while loop.
-        static bin_codes_t bin_codes; 
+        static bin_codes_t bin_codes = {}; 
+       /*
+        uint8_t bin_codes_t.d_bit;
+        uint8_t bin_codes_t.w_bit;
+        uint8_t bin_codes_t.mod_bits;
+        uint8_t bin_codes_t.reg_bits;
+        uint8_t bin_codes_t.rm_bits;
+        uint8_t bin_codes_t.src_bits;
+        uint8_t bin_codes_t.dest_bits;
+       */ 
         ////////////////////////////////////
 
         static uint8_t byte_number = 1;
-        static bool is_d = 0;
-        static bool is_w = 0;
-        static uint8_t mod_field, reg_field, rm_field;
-        static uint8_t instruction, src_field, dest_field;
+        static uint8_t instruction; // got rid of 
         static uint16_t opcode;
 
         if(byte_number == 1)
         {
+            // START HERE-- DOUBLE CHECK THIS STUFF BEFORE MERGING BACK TO MAIN BRANCH
+            // TODO: we can maybe move some of the below code into the
+            // HandleByte_1() function, though not sure if we 
+            // should/need to, think about it
+            //////////////////////////////////////////////////////////////////////
             opcode = GetOpcode(byte);
             instruction = (uint8_t)(opcode >> 8); //the high order byte indicates instruction
 
@@ -82,79 +85,30 @@ int main(int argc, char *argv[])
                     strcpy(full_inst.instruct, "PUSH\0");
                 } break;
             }
-            switch(opcode)
+            // if on the last byte, (return value of HandleByte),
+            // then back to top of loop
+            if(HandleByte_1(&full_inst, &bin_codes, opcode, byte))
             {
-                case REGMEM_TF_REG:
-                {
-                    is_d = byte & 0b00000010;   
-                    is_w = byte & 0b00000001;
-                } break;
-
-                case IM_T_REGMEM:
-                {
-                    is_w = byte & 0b00000001;
-                } break;
-
-                case IM_T_REG:
-                {
-
-                    // PROTOTYPE: HandleByte1(Opcode, )
-
-                    is_w = byte & 0b00001000;
-                    reg_field = byte & 0b00000111;                    
-                } break;
+                byte_number = 1;
+                continue;
             }
+            // other wise move on to the next byte
+            // NOTE: we need to move to next iteration of loop
+            // because we need to read the next byte
             byte_number++;
-            continue;
+            continue; 
         }
 
         if(byte_number == 2)
         {
-            switch(opcode)
+
+            if(HandleByte_2(&full_inst, &bin_codes, opcode, byte))
             {
-                // eg MOV AX, CX
-                case REGMEM_TF_REG:
-                {
-                    mod_field = (byte & 0b11000000) >> 6;
-                    reg_field = (byte & 0b00111000) >> 3;
-
-                    // d == 0: source is specified in REG field
-                    // d == 1: dest is specified in REG field
-                    if(mod_field == REG_MOD)
-                    {
-                        if(is_d)
-                        {
-                            dest_field = (byte & 0b00111000) >> 3;
-                            src_field = (byte & 0b00000111);
-                        }
-                        else
-                        {
-                            dest_field = (byte & 0b00000111);
-                            src_field = (byte & 0b00111000) >> 3;
-                        }
-
-                        // TODO: this might actually be more generalizable
-                        // to other instructions types
-                        RR_GetReg(&full_inst, src_field, dest_field, is_w); 
-
-                        // Register mode tells us this is the last byte
-                        printf("%s %s, %s\n", full_inst.instruct, full_inst.operand_1, full_inst.operand_2);
-                        byte_number = 1;
-                        continue; 
-                    }
-                    // TODO: add else ifs for when mod field is 00, 01, 10
-                } break;
-
-                case IM_T_REGMEM:
-                {
-                    // START HERE KEEP FILLING IN THIS
-                    // MAYBE AFTER CHAPTER 2 VIDEO
-                } break;
-
-                case IM_T_REG:
-                {
-                } break;
+                byte_number = 1;
+                continue;
             }
+            byte_number++;
+            continue;
         }
     }
 
