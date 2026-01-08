@@ -5,7 +5,7 @@
 // SEE: internal lookup table in "header.h"
 
 // e.g.:
-// 0x0102 -> 01 indicates "MOV", 0102 indicates
+// 0x0102 -> 01 indicates "MOV", 0102 indicates REGMEM_TF_REG
 
 uint16_t GetOpcode(uint8_t instruct)
 {
