@@ -71,6 +71,13 @@ typedef uint8_t BYTE;
 #define BH 0b111
 #define DI 0b111
 
+////////////////////////////////
+// Macros for output formatting
+////////////////////////////////
+#define STR_STR 0x01
+#define STR_INT 0x02
+#define INT_STR 0x03
+
 /////////////////////////////////
 // Structs
 /////////////////////////////////
@@ -85,6 +92,8 @@ struct bin_codes_t
   uint8_t rm_bits;
   uint8_t src_bits;
   uint8_t dest_bits;
+  uint8_t data_lo;
+  uint8_t data_hi;
 };
 
 // struct for asm instructions
@@ -93,6 +102,7 @@ struct asm_inst
   char instruct[5];
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
+  bool is_complete;
 };
 
 #endif

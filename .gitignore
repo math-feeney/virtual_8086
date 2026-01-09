@@ -5,3 +5,4 @@ test_input.txt
 .vscode/
 app.out
 listings/
+*.o

@@ -30,6 +30,36 @@ uint16_t GetOpcode(uint8_t instruct)
         return 0;
     }
 }
+
+//////////////////////////////////////////
+// Function to handle fill inst 
+// (if it's done)
+// assumes the instruction is complete
+//////////////////////////////////////////
+// TODO: at some point we're probably going to want to change
+// this from a printf to something else
+void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
+{
+    switch(format)
+    {
+        case STR_STR:
+        {
+            printf("%s %s, %s\n", full_inst->instruct, full_inst->operand_1, full_inst->operand_2);
+        } break;
+        case STR_INT:
+        {
+            printf("%s %s, %d\n", full_inst->instruct, full_inst->operand_1, int_value);
+        } break;
+        case INT_STR:
+        {
+            printf("%s %d, %s\n", full_inst->instruct, int_value, full_inst->operand_2);
+        } break;
+    }
+}
+
+
+
+
 ////////////////////////////////////////////
 // functions to handle each subsequent byte
 ////////////////////////////////////////////
@@ -110,7 +140,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 // TODO: will want to move this to an outside function 
                 // so we can handle in other ways besides just printing to 
                 // console
-                printf("%s %s, %s\n", full_inst->instruct, full_inst->operand_1, full_inst->operand_2);
+                HandleInst(full_inst, STR_STR, 0);
                 is_last_byte = true;
             }
             else if(bin_codes->reg_bits == MEM_MOD)
@@ -129,6 +159,15 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
 
         case IM_T_REG:
         {
+            bin_codes->dest_bits = bin_codes->reg_bits;
+            bin_codes->data_lo = byte;
+            if(!bin_codes->w_bit)
+            {
+                bool reg_is_src = true;
+                R_GetReg(full_inst, bin_codes->reg_bits, (bool)bin_codes->w_bit, reg_is_src);
+                HandleInst(full_inst, STR_INT, (int)byte);
+                is_last_byte = true;
+            }
         } break;
     }
     return is_last_byte;

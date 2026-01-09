@@ -5,4 +5,6 @@
 
 set -eou pipefail
 
-g++ -o app.out ./src/*.cpp -Iinclude -g
+g++ -c -g -Iinclude ./src/*.cpp
+
+g++ -o app.out *.o
