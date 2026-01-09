@@ -15,4 +15,4 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
 bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte);
 bool HandleByte_6(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte);
 
-#endif:
+#endif

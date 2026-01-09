@@ -58,11 +58,9 @@ int main(int argc, char *argv[])
 
         if(byte_number == 1)
         {
-            // START HERE-- DOUBLE CHECK THIS STUFF BEFORE MERGING BACK TO MAIN BRANCH
             // TODO: we can maybe move some of the below code into the
             // HandleByte_1() function, though not sure if we 
             // should/need to, think about it
-            //////////////////////////////////////////////////////////////////////
             opcode = GetOpcode(byte);
             instruction = (uint8_t)(opcode >> 8); //the high order byte indicates instruction
 
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
                 byte_number = 1;
                 continue;
             }
-            // other wise move on to the next byte
+            // otherwise move on to the next byte
             // NOTE: we need to move to next iteration of loop
             // because we need to read the next byte
             byte_number++;
