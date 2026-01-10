@@ -102,7 +102,6 @@ struct asm_inst
   char instruct[5];
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
-  bool is_complete;
 };
 
 #endif

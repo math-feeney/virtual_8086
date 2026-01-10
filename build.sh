@@ -5,6 +5,11 @@
 
 set -eou pipefail
 
+# 1. Preprocess
+g++ -E -Iinclude src/*.cpp > 
+
+
+
 g++ -c -g -Iinclude ./src/*.cpp
 
 g++ -o app.out *.o

@@ -31,6 +31,12 @@ uint16_t GetOpcode(uint8_t instruct)
     }
 }
 
+// get a 16-bite unsigend integer from 2 separate bytes
+uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte)
+{
+    return (uint16_t)lo_byte | ((uint16_t)hi_byte << 8);
+}
+
 //////////////////////////////////////////
 // Function to handle fill inst 
 // (if it's done)
@@ -48,17 +54,14 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
         } break;
         case STR_INT:
         {
-            printf("%s %s, %d\n", full_inst->instruct, full_inst->operand_1, int_value);
+            printf("%s %s, %u\n", full_inst->instruct, full_inst->operand_1, int_value);
         } break;
         case INT_STR:
         {
-            printf("%s %d, %s\n", full_inst->instruct, int_value, full_inst->operand_2);
+            printf("%s %u, %s\n", full_inst->instruct, int_value, full_inst->operand_2);
         } break;
     }
 }
-
-
-
 
 ////////////////////////////////////////////
 // functions to handle each subsequent byte
@@ -159,15 +162,41 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
 
         case IM_T_REG:
         {
+            bool reg_is_dest = true;
             bin_codes->dest_bits = bin_codes->reg_bits;
             bin_codes->data_lo = byte;
+            R_GetReg(full_inst, bin_codes->reg_bits, (bool)bin_codes->w_bit, reg_is_dest);
             if(!bin_codes->w_bit)
             {
-                bool reg_is_src = true;
-                R_GetReg(full_inst, bin_codes->reg_bits, (bool)bin_codes->w_bit, reg_is_src);
                 HandleInst(full_inst, STR_INT, (int)byte);
                 is_last_byte = true;
             }
+            // In this else case, there is a 16-bit disp
+            // so this byte and the next byte are the data
+            else
+            {
+                // Nothing to be done
+                // we have data_lo and still
+                // need to read in next byte for data_hi
+                // is_last_byte is already false
+            }
+        } break;
+    }
+    return is_last_byte;
+}
+
+bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte)
+{
+    bool is_last_byte = false;
+    switch(opcode)
+    {
+        case IM_T_REG:
+        {
+            bin_codes->data_hi = byte;
+            uint16_t output_value;
+            output_value = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
+            HandleInst(full_inst, STR_INT, (int)output_value);
+            is_last_byte = true;
         } break;
     }
     return is_last_byte;

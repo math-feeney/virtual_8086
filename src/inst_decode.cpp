@@ -108,6 +108,17 @@ int main(int argc, char *argv[])
             byte_number++;
             continue;
         }
+        if(byte_number == 3)
+        {
+            if(HandleByte_3(&full_inst, &bin_codes, opcode, byte))
+            {
+                byte_number = 1;
+                continue;
+            }
+            byte_number++;
+            continue;
+
+        }
     }
 
     // close file
