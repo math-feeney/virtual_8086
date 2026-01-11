@@ -1,8 +1,13 @@
 #include "header.h"
 #include "functions.h"
 
-// So far just includes functions in the "Register to Register" scenario 
+//////////////////////////////////////////////////////////////////////
+// Functions that set the values in the decoded instruction struct
+// i.e. convert from tmachine code to assembly
+////////////////////////////////////////////////////////////////////
 
+// Set operands in a Register-to-Register MOV, so both are registers
+// *Assumes MOD field is 0b11
 void RR_GetReg(asm_inst* full_inst, uint8_t src_field, uint8_t dest_field, bool is_w) 
 {
     if(is_w)
@@ -318,7 +323,8 @@ void R_GetReg(asm_inst *full_inst, uint8_t reg_field, bool is_w, bool is_dest)
     }
 }
 
-
+// this resolved an unreferenced function linker error
+// can probably get rid of soon
 void force_emit() {
     R_GetReg(nullptr, 0, false, false);
 }

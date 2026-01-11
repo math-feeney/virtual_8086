@@ -5,11 +5,15 @@
 
 set -eou pipefail
 
-# 1. Preprocess
-g++ -E -Iinclude src/*.cpp > 
+CXX=g++
+CXXFLAGS="-std=c++20 -Wall -Wextra -Wpedantic -g -O0"
+INCLUDES="Iinclude"
 
+# compile
+for src in src/*.cpp; do
+    obj="build/$(basename "${src%.cpp}.o")"
+    $CXX $CXXFLAGS $INCLUDES -c "$src" -o "$obj"
+done
 
-
-g++ -c -g -Iinclude ./src/*.cpp
-
-g++ -o app.out *.o
+# Link
+$CXX build/*.o -o app.out
