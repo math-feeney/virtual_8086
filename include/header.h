@@ -54,6 +54,7 @@ typedef uint8_t BYTE;
 ////////////////////////
 // Macros for Registers
 ////////////////////////
+// MOD = 11 //////
 #define AL 0b000
 #define AX 0b000
 #define CL 0b001
@@ -70,6 +71,20 @@ typedef uint8_t BYTE;
 #define SI 0b110
 #define BH 0b111
 #define DI 0b111
+
+// MOD = 00
+#define BX_PLUS_SI
+#define BX_PLUS_DI
+#define BP_PLUS_SI
+#define BP_PLUS_DI
+#define SI
+#define DI
+#define DIRECT_ADDRESS
+#define BX
+
+////START HERE
+//// STILL NEED TO ADD register/memory field
+// encoding for MOD = 01 and MOD = 10
 
 ////////////////////////////////
 // Macros for output formatting

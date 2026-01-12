@@ -117,19 +117,21 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
         {
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
+            bin_codes->rm_bits = (byte & 0b00000111);
             // d == 0: source is specified in REG field
             // d == 1: dest is specified in REG field
             if(bin_codes->mod_bits == REG_MOD)
             {
                 if(bin_codes->d_bit)
                 {
-                    bin_codes->dest_bits = (byte & 0b00111000) >> 3;
-                    bin_codes->src_bits = (byte & 0b00000111);
+                    bin_codes->dest_bits = bin_codes->reg_bits;
+                    bin_codes->src_bits = bin_codes->rm_bits;
                 }
                 else
                 {
-                    bin_codes->dest_bits = (byte & 0b00000111);
-                    bin_codes->src_bits = (byte & 0b00111000) >> 3;
+                    bin_codes->dest_bits = bin_codes->reg_bits;
+
+                    bin_codes->src_bits = bin_codes->rm_bits;
                 }
 
                 // TODO: this might actually be more generalizable
@@ -148,8 +150,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             }
             else if(bin_codes->reg_bits == MEM_MOD)
             {
-                //something
-                printf("should not hit this yet\n");
+                // START HERE //////////////////////////////////////////////////////////
             }
 
 
