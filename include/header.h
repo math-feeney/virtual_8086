@@ -73,14 +73,14 @@ typedef uint8_t BYTE;
 #define DI 0b111
 
 // MOD = 00
-#define BX_PLUS_SI
-#define BX_PLUS_DI
-#define BP_PLUS_SI
-#define BP_PLUS_DI
-#define SI
-#define DI
-#define DIRECT_ADDRESS
-#define BX
+#define BX_PLUS_SI 0b000
+#define BX_PLUS_DI 0b001
+#define BP_PLUS_SI 0b010
+#define BP_PLUS_DI 0b011
+#define SI_EFF_ADD 0b100 // EFF_ADD extension needed to differ from above codes
+#define DI_EFF_ADD 0b101
+#define DIRECT_ADDRESS 0b110
+#define BX_EFF_ADD 0b111
 
 ////START HERE
 //// STILL NEED TO ADD register/memory field

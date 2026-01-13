@@ -148,11 +148,17 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 HandleInst(full_inst, STR_STR, 0);
                 is_last_byte = true;
             }
-            else if(bin_codes->reg_bits == MEM_MOD)
+            else if(bin_codes->mod_bits == MEM_MOD)
             {
-                // START HERE //////////////////////////////////////////////////////////
+                GetReg_MOD00(full_inst, bin_codes);
             }
-
+            // test if we will need a direct address so we will
+            // need to read in more bytes
+            if(bin_codes->rm_bits != 0b110)
+            {
+                is_last_byte = true;
+                HandleInst(full_inst, STR_STR, (int)byte);
+            }
 
 
         } break;
