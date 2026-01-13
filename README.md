@@ -3,6 +3,17 @@
 ## Log:
 (Scroll down for older entries)
 
+-- 2026-01-12 --
+- Wrote more decoding in HandleByte_2 for MOD = 00 (Memory mode, no displacement follows*)
+- Added another GetReg() function to apply for MOD = 00, this one I think is better than the first RR_GetReg()
+function because instead of duplicating the process for both d-bit positions, it just assumed the d bit is 1,
+then flips the operands at the end if the d-bit is 0
+- Note: I should think about redoing RR_GetReg() in a similar fashion
+- I should also maybe think about a better way to implement these dewcoding tables other than these long
+explicit functions with large switch statements; maybe I can implement some kind of key:value type structure
+- Speaking of the big switch statements I changed the formatting on them a lot, in a way that makes 
+them easier to read at a glance since they are basically lookup tables.
+
 -- 2026-01-09 --
 - Started implementing HandleInst() function so I could generalize what happens when an instruction is complete
 instead of always printing to console in the while loop
