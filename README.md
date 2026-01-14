@@ -3,6 +3,14 @@
 ## Log:
 (Scroll down for older entries)
 
+-- 2026-01-13 --
+- Completed I believe all effective address moves (REGMEM_TF_REG where MOD bytes are any value)
+- I hade to add some options in the HandleInst() functtion, mainly to deal with the fact that displacements
+need to go inside the square brackets if they exist. This was a good tradeoff that enabled me to reuse
+the GetRegMOD_00() function for the other mod values, since they can use the same table of register values, 
+as long as I can add the displacement values later.
+- Because of this I should maybe rename to GetRegMOD(), since I can use for other mod values than 00
+
 -- 2026-01-12 --
 - Wrote more decoding in HandleByte_2 for MOD = 00 (Memory mode, no displacement follows*)
 - Added another GetReg() function to apply for MOD = 00, this one I think is better than the first RR_GetReg()

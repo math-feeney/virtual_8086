@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
             byte_number++;
             continue;
         }
+
         if(byte_number == 3)
         {
             if(HandleByte_3(&full_inst, &bin_codes, opcode, byte))
@@ -119,6 +120,22 @@ int main(int argc, char *argv[])
             continue;
 
         }
+
+        if(byte_number == 4)
+        {
+            if(HandleByte_4(&full_inst, &bin_codes, opcode, byte))
+            {
+                byte_number = 1;
+                continue;
+            }
+            byte_number++;
+            continue;
+        }
+        if(byte_number == 5)
+        {
+            // HANDLE BYTE 5
+        }
+
     }
 
     // close file

@@ -79,7 +79,7 @@ typedef uint8_t BYTE;
 #define BP_PLUS_DI 0b011
 #define SI_EFF_ADD 0b100 // EFF_ADD extension needed to differ from above codes
 #define DI_EFF_ADD 0b101
-#define DIRECT_ADDRESS 0b110
+#define BP_DIR_ADD 0b110 // this is only bp if modbits != 00, otherwise direct address
 #define BX_EFF_ADD 0b111
 
 ////START HERE
@@ -89,9 +89,13 @@ typedef uint8_t BYTE;
 ////////////////////////////////
 // Macros for output formatting
 ////////////////////////////////
-#define STR_STR 0x01
-#define STR_INT 0x02
-#define INT_STR 0x03
+#define STR_STR  0x01
+#define STR_INT  0x02
+#define INT_STR  0x03
+#define SRC_00   0x04
+#define DES_00   0x05
+#define SRC_DIS  0x06
+#define DES_DIS  0x07
 
 /////////////////////////////////
 // Structs
@@ -117,6 +121,7 @@ struct asm_inst
   char instruct[5];
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
+  uint16_t disp;
 };
 
 #endif

@@ -185,16 +185,14 @@ void GetReg_MOD00(asm_inst *full_inst, bin_codes_t *bin_codes)
     }
     switch(bin_codes->rm_bits)
     {
-        case BX_PLUS_SI: strcpy(full_inst->operand_2, "[BX + SI]\0"); break;
-        case BX_PLUS_DI: strcpy(full_inst->operand_2, "[BX + DI]\0"); break;
-        case BP_PLUS_SI: strcpy(full_inst->operand_2, "[BP + SI]\0"); break;
-        case BP_PLUS_DI: strcpy(full_inst->operand_2, "[BP + DI]\0"); break;
-        case SI_EFF_ADD: strcpy(full_inst->operand_2, "[SI]\0"); break;
-        case DI_EFF_ADD: strcpy(full_inst->operand_2, "[DI]\0"); break;
-
-        // this can be written over but will need to be changed
-        case DIRECT_ADDRESS: strcpy(full_inst->operand_2, "DIRECT ADDRESS\0"); break;
-        case BX_EFF_ADD: strcpy(full_inst->operand_2, "[BX]\0"); break;
+        case BX_PLUS_SI: strcpy(full_inst->operand_2, "BX + SI\0"); break;
+        case BX_PLUS_DI: strcpy(full_inst->operand_2, "BX + DI\0"); break;
+        case BP_PLUS_SI: strcpy(full_inst->operand_2, "BP + SI\0"); break;
+        case BP_PLUS_DI: strcpy(full_inst->operand_2, "BP + DI\0"); break;
+        case SI_EFF_ADD: strcpy(full_inst->operand_2, "SI\0"); break;
+        case DI_EFF_ADD: strcpy(full_inst->operand_2, "DI\0"); break;
+        case BP_DIR_ADD: strcpy(full_inst->operand_2, "BP\0"); break;
+        case BX_EFF_ADD: strcpy(full_inst->operand_2, "BX\0"); break;
     }
     if(!bin_codes->d_bit)
     {

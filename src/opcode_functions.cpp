@@ -60,6 +60,24 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
         {
             printf("%s %u, %s\n", full_inst->instruct, int_value, full_inst->operand_2);
         } break;
+        case SRC_00:
+        {
+            printf("%s %s, [%s]\n", full_inst->instruct, full_inst->operand_1, full_inst->operand_2);
+        } break;
+        case DES_00:
+        {
+            printf("%s [%s], %s\n", full_inst->instruct, full_inst->operand_1, full_inst->operand_2);
+        } break;
+        case SRC_DIS:
+        {
+            printf("%s %s, [%s + %u]\n", full_inst->instruct, full_inst->operand_1, 
+                                       full_inst->operand_2, full_inst->disp);
+        } break;
+        case DES_DIS:
+        {
+            printf("%s [%s + %u], %s\n", full_inst->instruct, full_inst->operand_1, 
+                                       full_inst->disp, full_inst->operand_2);
+        } break;
     }
 }
 
@@ -148,16 +166,23 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 HandleInst(full_inst, STR_STR, 0);
                 is_last_byte = true;
             }
-            else if(bin_codes->mod_bits == MEM_MOD)
+            else // if mod_bits are 00, 01, or 10 
             {
                 GetReg_MOD00(full_inst, bin_codes);
             }
-            // test if we will need a direct address so we will
-            // need to read in more bytes
-            if(bin_codes->rm_bits != 0b110)
+            // We are done if mod == 00 unless looking for direct address
+            if((bin_codes->mod_bits == MEM_MOD) && (bin_codes->rm_bits != 0b110))
             {
+                bool is_src_add_calc = bin_codes->d_bit;
                 is_last_byte = true;
-                HandleInst(full_inst, STR_STR, (int)byte);
+                if(is_src_add_calc)
+                {
+                    HandleInst(full_inst, SRC_00, 0);
+                }
+                else
+                {
+                    HandleInst(full_inst, DES_00, 0);
+                }
             }
 
 
@@ -197,12 +222,67 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
     bool is_last_byte = false;
     switch(opcode)
     {
+        case REGMEM_TF_REG:
+        {
+            bool is_src_add_calc = bin_codes->d_bit;
+
+            // need to read this bit as data anyway
+            // then if in 8-bit mem mod we are done
+            bin_codes->data_lo = byte;
+            if(bin_codes->mod_bits == MEM_MOD_8)
+            {
+                full_inst->disp = byte;
+                is_last_byte = true;
+                if(is_src_add_calc)
+                {
+                    HandleInst(full_inst, SRC_DIS, 0);
+                }
+                else
+                {
+                    HandleInst(full_inst, DES_DIS, 0);
+                }
+            }
+        } break;
         case IM_T_REG:
         {
             bin_codes->data_hi = byte;
             uint16_t output_value;
             output_value = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
             HandleInst(full_inst, STR_INT, (int)output_value);
+            is_last_byte = true;
+        } break;
+    }
+    return is_last_byte;
+}
+
+bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte)
+{
+    bool is_last_byte = false;
+    switch(opcode)
+    {
+        case REGMEM_TF_REG:
+        {
+            bin_codes->data_hi = byte;
+            bool is_src_add_calc = bin_codes->d_bit;
+            if(bin_codes->mod_bits == MEM_MOD_16)
+            {
+                full_inst->disp = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
+                is_last_byte = true;
+                if(is_src_add_calc)
+                {
+                    HandleInst(full_inst, SRC_DIS, 0);
+                }
+                else
+                {
+                    HandleInst(full_inst, DES_DIS, 0);
+                }
+            }
+            else if(bin_codes->mod_bits == 0b00)
+            {
+                full_inst->disp = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
+                printf("We still need to handle direct address\n");
+                // TODO: HANDLE DIRECT ADDRESS
+            }
             is_last_byte = true;
         } break;
     }
