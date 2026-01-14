@@ -72,7 +72,7 @@ typedef uint8_t BYTE;
 #define BH 0b111
 #define DI 0b111
 
-// MOD = 00
+// RM field for MOD = 00, 01, 10
 #define BX_PLUS_SI 0b000
 #define BX_PLUS_DI 0b001
 #define BP_PLUS_SI 0b010
@@ -81,10 +81,6 @@ typedef uint8_t BYTE;
 #define DI_EFF_ADD 0b101
 #define BP_DIR_ADD 0b110 // this is only bp if modbits != 00, otherwise direct address
 #define BX_EFF_ADD 0b111
-
-////START HERE
-//// STILL NEED TO ADD register/memory field
-// encoding for MOD = 01 and MOD = 10
 
 ////////////////////////////////
 // Macros for output formatting
