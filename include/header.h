@@ -109,6 +109,8 @@ struct bin_codes_t
   uint8_t rm_bits;
   uint8_t src_bits;
   uint8_t dest_bits;
+  uint8_t disp_lo;
+  uint8_t disp_hi;
   uint8_t data_lo;
   uint8_t data_hi;
 };
@@ -120,6 +122,7 @@ struct asm_inst
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
   int16_t disp;
+  int16_t data;
 };
 
 #endif

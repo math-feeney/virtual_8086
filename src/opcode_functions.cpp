@@ -1,6 +1,18 @@
 #include "header.h"
 #include "functions.h"
 
+// assert function
+void assert(bool is_true)
+{
+    if(!is_true)
+    {
+        printf("\nassert failed\n");
+        char *bad_val = nullptr;
+        char bad_deref = *bad_val; 
+        printf("%c\n", bad_deref);
+    }
+}
+
 // NOTE: high order byte in return value indicates instruction category
 // full two bytes indicates specific opcode
 // SEE: internal lookup table in "header.h"
@@ -194,6 +206,10 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
 
         case IM_T_REGMEM:
         {
+            // manual specifically mantions bytes 4,5,6 are 0
+            assert(!(byte & 0b00111000));
+            bin_codes->mod_bits = (byte & 0b11000000) >> 6;
+            bin_codes->rm_bits = (byte & 0b00000111);
         } break;
 
         case IM_T_REG:
@@ -236,7 +252,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->data_lo = byte;
             if(bin_codes->mod_bits == MEM_MOD_8)
             {
-                // START HERE:
+                // TODO:
                 // THINK ABOUT HOW TO CLEAN THIS UP
                 // ALSO NEED TO DEAL WITH SIGNS in the ACTUAL PRINT (EG DI + -37)
                 int8_t signed_byte = (int8_t)byte;
@@ -251,6 +267,10 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                     HandleInst(full_inst, DES_DIS, 0);
                 }
             }
+        } break;
+        case IM_T_REGMEM:
+        {
+            bin_codes->disp_lo = byte;
         } break;
         case IM_T_REG:
         {
@@ -294,6 +314,43 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             }
             is_last_byte = true;
         } break;
+        case IM_T_REGMEM:
+        {
+            bin_codes->disp_hi = byte;
+        } break;
     }
+    return is_last_byte;
+}
+
+bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte)
+{
+    bool is_last_byte = false;
+    switch(opcode)
+    {
+        case IM_T_REGMEM:
+        {
+            bin_codes->data_lo = byte;
+            if(!bin_codes->w_bit)
+            {
+                is_last_byte = true;
+            }
+        } break;
+    }
+ 
+    return is_last_byte;
+}
+
+bool HandleByte_6(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte)
+{
+    bool is_last_byte = false;
+    switch(opcode)
+    {
+        case IM_T_REGMEM:
+        {
+            bin_codes->data_hi = byte;
+            is_last_byte = true;
+        } break;
+    }
+ 
     return is_last_byte;
 }
