@@ -9,6 +9,8 @@
 
 // define type to store each byte
 typedef uint8_t BYTE;
+typedef uint16_t WORD;
+typedef int16_t SWORD; // signed word
 
 ////////////////////////////
 // Bit Masks
@@ -117,7 +119,7 @@ struct asm_inst
   char instruct[5];
   char operand_1[17]; // 16 bytes plus NUL terminator
   char operand_2[17];
-  uint16_t disp;
+  int16_t disp;
 };
 
 #endif

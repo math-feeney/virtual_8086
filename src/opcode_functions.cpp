@@ -37,6 +37,8 @@ uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte)
     return (uint16_t)lo_byte | ((uint16_t)hi_byte << 8);
 }
 
+
+
 //////////////////////////////////////////
 // Function to handle fill inst 
 // (if it's done)
@@ -46,6 +48,7 @@ uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte)
 // this from a printf to something else
 void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
 {
+    printf("\n");
     switch(format)
     {
         case STR_STR:
@@ -54,7 +57,7 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
         } break;
         case STR_INT:
         {
-            printf("%s %s, %u\n", full_inst->instruct, full_inst->operand_1, int_value);
+            printf("%s %s, %d\n", full_inst->instruct, full_inst->operand_1, int_value);
         } break;
         case INT_STR:
         {
@@ -70,15 +73,16 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
         } break;
         case SRC_DIS:
         {
-            printf("%s %s, [%s + %u]\n", full_inst->instruct, full_inst->operand_1, 
+            printf("%s %s, [%s + %d]\n", full_inst->instruct, full_inst->operand_1, 
                                        full_inst->operand_2, full_inst->disp);
         } break;
         case DES_DIS:
         {
-            printf("%s [%s + %u], %s\n", full_inst->instruct, full_inst->operand_1, 
+            printf("%s [%s + %d], %s\n", full_inst->instruct, full_inst->operand_1, 
                                        full_inst->disp, full_inst->operand_2);
         } break;
     }
+    printf("\n");
 }
 
 ////////////////////////////////////////////
@@ -200,7 +204,8 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             R_GetReg(full_inst, bin_codes->reg_bits, (bool)bin_codes->w_bit, reg_is_dest);
             if(!bin_codes->w_bit)
             {
-                HandleInst(full_inst, STR_INT, (int)byte);
+                int signed_byte = (int8_t)bin_codes->data_lo;
+                HandleInst(full_inst, STR_INT, signed_byte);
                 is_last_byte = true;
             }
             // In this else case, there is a 16-bit disp
@@ -231,7 +236,11 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->data_lo = byte;
             if(bin_codes->mod_bits == MEM_MOD_8)
             {
-                full_inst->disp = byte;
+                // START HERE:
+                // THINK ABOUT HOW TO CLEAN THIS UP
+                // ALSO NEED TO DEAL WITH SIGNS in the ACTUAL PRINT (EG DI + -37)
+                int8_t signed_byte = (int8_t)byte;
+                full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
                 if(is_src_add_calc)
                 {
@@ -246,8 +255,8 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
         case IM_T_REG:
         {
             bin_codes->data_hi = byte;
-            uint16_t output_value;
-            output_value = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
+            SWORD output_value;
+            output_value = (SWORD)Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
             HandleInst(full_inst, STR_INT, (int)output_value);
             is_last_byte = true;
         } break;

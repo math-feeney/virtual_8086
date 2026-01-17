@@ -3,6 +3,14 @@
 ## Log:
 (Scroll down for older entries)
 
+-- 2026-01-16 --
+- Struggled a lot today with dealing with sign extensions. Working on listing 40, which had signed displacements, made me realize I was maybe dealing with previous values incorrectly, or at least not thinking about them correctly.
+- Getting a better understanding of this required a lot of playing around with typecasting.
+- Because I am reading one byte in at a time, and I'm trying to in some cases combine two bytes into one 16-bit value, I have to be careful that no unintentional conversions happen in the process, and per the manual I need to make sure that 8-bit displacements are sign-extended to 16 bits.
+- I think most of the difficulty here is jsut wrapping my head around it, and I'm still trying to do that. But I think it's important for me to do.
+- This has also been a good opportunity to learn two's complement better
+- **LESSON: Be careful when converting between signed/unsigned and variable of different numbers of bytes (e.g. uint8_t to int16_t), make sure you understand when sign extension is happening**
+
 -- 2026-01-13 --
 - Completed I believe all effective address moves (REGMEM_TF_REG where MOD bytes are any value)
 - I hade to add some options in the HandleInst() functtion, mainly to deal with the fact that displacements

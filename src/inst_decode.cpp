@@ -56,13 +56,15 @@ int main(int argc, char *argv[])
         static uint8_t instruction; // got rid of 
         static uint16_t opcode;
 
+        // DEBUG PRINT BYTE
+        printf("%02x", (unsigned int)byte);
         if(byte_number == 1)
         {
             // TODO: we can maybe move some of the below code into the
             // HandleByte_1() function, though not sure if we 
             // should/need to, think about it
             opcode = GetOpcode(byte);
-            instruction = (uint8_t)(opcode >> 8); //the high order byte indicates instruction
+            instruction = (BYTE)(opcode >> 8); //the high order byte indicates instruction
 
             if(!opcode) 
             {
