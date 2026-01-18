@@ -329,9 +329,11 @@ bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
     {
         case IM_T_REGMEM:
         {
+            GetReg_IM_T_REGMEM(full_inst, bin_codes);
             bin_codes->data_lo = byte;
             if(!bin_codes->w_bit)
             {
+                // START HERE: need to handleinst with lo bytes as 8 bit
                 is_last_byte = true;
             }
         } break;

@@ -9,6 +9,7 @@ void assert(bool is_true);
 void RR_GetReg(asm_inst* full_inst, uint8_t src_field, uint8_t dest_field, bool is_w); 
 void R_GetReg(asm_inst *full_inst, uint8_t reg_field, bool is_w, bool is_dest);
 void GetReg_MOD00(asm_inst *full_inst, bin_codes_t *bin_codes);
+void GetReg_IM_T_REGMEM(asm_inst *full_inst, bin_codes_t *bin_codes); 
 uint16_t GetOpcode(uint8_t instruct);
 uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte);
 
