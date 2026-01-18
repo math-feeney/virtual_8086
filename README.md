@@ -4,7 +4,8 @@
 (Scroll down for older entries)
 
 -- 2026-01-17 --
-- for immediate to memory, I realized I should have been more careful differentiating between "disp" fields and "data fields", so some of the earlier decodes may use one in place of the other, but should only be the case when both are not needed, only one.
+- For immediate to memory, I realized I should have been more careful differentiating between "disp" fields and "data fields", so some of the earlier decodes may use one in place of the other, but should only be the case when both are not needed, only one.
+- Starting to think about rewriting the GetReg family of functiions to make them more modular and generalizable, which would enable fewer functions. Right now I'm usually having to write a new function for each different opcode.
 
 -- 2026-01-16 --
 - Struggled a lot today with dealing with sign extensions. Working on listing 40, which had signed displacements, made me realize I was maybe dealing with previous values incorrectly, or at least not thinking about them correctly.
