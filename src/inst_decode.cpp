@@ -145,7 +145,13 @@ int main(int argc, char *argv[])
         }
         if(byte_number == 6)
         {
-            // HANDLE BYTE 6
+            if(HandleByte_6(&full_inst, &bin_codes, opcode, byte))
+            {
+                byte_number = 1;
+                continue;
+            }
+            printf("ERROR: expecting 7th byte\n");
+            return 1;
         }
 
     }

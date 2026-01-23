@@ -7,6 +7,8 @@
 - It looks like in some cases the disp bytes in the instruction encoding table (table 4-12) are not included? 
 For example, in listing 40, the bytes 0xc60307 should decode to MV [BP + DI], byte 7. 7 is the data byte there, but the table seems to suggest there should be two disp bytes before that. 
 - update: I realized that the MOD field still indicated whether displacements are present, so in this case the mod field is 00, indicating no displacement bytes, but I still need the data byte(s)
+- update: fixed this issue now immediate to regmem moves seem to work with explicit sizes
+- HandleInst() function is getting more unwieldy, maybe should refactor later if I can make it more generalizable
 
 -- 2026-01-17 --
 - For immediate to memory, I realized I should have been more careful differentiating between "disp" fields and "data fields", so some of the earlier decodes may use one in place of the other, but should only be the case when both are not needed, only one.

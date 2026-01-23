@@ -87,14 +87,17 @@ typedef int16_t SWORD; // signed word
 ////////////////////////////////
 // Macros for output formatting
 ////////////////////////////////
-#define STR_STR  0x01
-#define STR_INT  0x02
-#define INT_STR  0x03
-#define SRC_00   0x04
-#define DES_00   0x05
-#define SRC_DIS  0x06
-#define DES_DIS  0x07
-
+#define STR_STR     0x01
+#define STR_INT     0x02
+#define INT_STR     0x03
+#define SRC_00      0x04
+#define DES_00      0x05
+#define SRC_DIS     0x06
+#define DES_DIS     0x07
+#define DIS_IM_8    0x08
+#define DIS_IM_16   0x09
+#define EFDIS_IM_8  0x0A 
+#define EFDIS_IM_16 0x0B
 /////////////////////////////////
 // Structs
 /////////////////////////////////

@@ -207,23 +207,9 @@ void GetReg_IM_T_REGMEM(asm_inst *full_inst, bin_codes_t *bin_codes)
 {
     // There is no d-bit, this is moving an immediate value to reg/mem
     // so obviously the reg/mem val is the destination
-    if(bin_codes->mod_bits == MEM_MOD)
+    if(bin_codes->mod_bits == REG_MOD)
     {
         if(bin_codes->w_bit)
-        {
-            switch(bin_codes->rm_bits)
-            {
-                case AL: strcpy(full_inst->operand_1, "AL\0"); break;
-                case CL: strcpy(full_inst->operand_1, "CL\0"); break;
-                case DL: strcpy(full_inst->operand_1, "DL\0"); break;
-                case BL: strcpy(full_inst->operand_1, "BL\0"); break;
-                case AH: strcpy(full_inst->operand_1, "AH\0"); break;
-                case CH: strcpy(full_inst->operand_1, "CH\0"); break;
-                case DH: strcpy(full_inst->operand_1, "DH\0"); break;
-                case BH: strcpy(full_inst->operand_1, "BH\0"); break;
-            }
-        }
-        else
         {
             switch(bin_codes->rm_bits)
             {
@@ -238,19 +224,34 @@ void GetReg_IM_T_REGMEM(asm_inst *full_inst, bin_codes_t *bin_codes)
 
             }
         }
+        else
+        {
+            switch(bin_codes->rm_bits)
+            {
+                case AL: strcpy(full_inst->operand_1, "AL\0"); break;
+                case CL: strcpy(full_inst->operand_1, "CL\0"); break;
+                case DL: strcpy(full_inst->operand_1, "DL\0"); break;
+                case BL: strcpy(full_inst->operand_1, "BL\0"); break;
+                case AH: strcpy(full_inst->operand_1, "AH\0"); break;
+                case CH: strcpy(full_inst->operand_1, "CH\0"); break;
+                case DH: strcpy(full_inst->operand_1, "DH\0"); break;
+                case BH: strcpy(full_inst->operand_1, "BH\0"); break;
+
+            }
+        }
     }
     else
     {
         switch(bin_codes->rm_bits)
         {
-            case BX_PLUS_SI: strcpy(full_inst->operand_2, "BX + SI\0"); break;
-            case BX_PLUS_DI: strcpy(full_inst->operand_2, "BX + DI\0"); break;
-            case BP_PLUS_SI: strcpy(full_inst->operand_2, "BP + SI\0"); break;
-            case BP_PLUS_DI: strcpy(full_inst->operand_2, "BP + DI\0"); break;
-            case SI_EFF_ADD: strcpy(full_inst->operand_2, "SI\0"); break;
-            case DI_EFF_ADD: strcpy(full_inst->operand_2, "DI\0"); break;
-            case BP_DIR_ADD: strcpy(full_inst->operand_2, "BP\0"); break;
-            case BX_EFF_ADD: strcpy(full_inst->operand_2, "BX\0"); break;
+            case BX_PLUS_SI: strcpy(full_inst->operand_1, "BX + SI\0"); break;
+            case BX_PLUS_DI: strcpy(full_inst->operand_1, "BX + DI\0"); break;
+            case BP_PLUS_SI: strcpy(full_inst->operand_1, "BP + SI\0"); break;
+            case BP_PLUS_DI: strcpy(full_inst->operand_1, "BP + DI\0"); break;
+            case SI_EFF_ADD: strcpy(full_inst->operand_1, "SI\0"); break;
+            case DI_EFF_ADD: strcpy(full_inst->operand_1, "DI\0"); break;
+            case BP_DIR_ADD: strcpy(full_inst->operand_1, "BP\0"); break;
+            case BX_EFF_ADD: strcpy(full_inst->operand_1, "BX\0"); break;
         }
     }
 }
