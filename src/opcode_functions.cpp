@@ -34,7 +34,6 @@ uint16_t GetOpcode(uint8_t instruct)
     {
         return IM_T_REG;
     }
-    // TODO: add more opcodes
 
     else
     {
@@ -333,7 +332,8 @@ bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->data_lo = byte;
             if(!bin_codes->w_bit)
             {
-                // START HERE: need to handleinst with lo bytes as 8 bit
+                // START HERE: something is wrong here /////////////////////////
+                HandleInst(full_inst, SRC_DIS, 0);
                 is_last_byte = true;
             }
         } break;

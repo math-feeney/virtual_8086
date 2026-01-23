@@ -135,7 +135,17 @@ int main(int argc, char *argv[])
         }
         if(byte_number == 5)
         {
-            // HANDLE BYTE 5
+            if(HandleByte_5(&full_inst, &bin_codes, opcode, byte))
+            {
+                byte_number = 1;
+                continue;
+            }
+            byte_number++;
+            continue;
+        }
+        if(byte_number == 6)
+        {
+            // HANDLE BYTE 6
         }
 
     }
