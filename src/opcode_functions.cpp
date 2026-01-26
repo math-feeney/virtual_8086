@@ -34,6 +34,14 @@ uint16_t GetOpcode(uint8_t instruct)
     {
         return IM_T_REG;
     }
+    if((instruct & 0b11111110) == 0b10100000)
+    {
+        return MEM_T_ACC;
+    }
+    if((instruct & 0b11111110) == 0b10100010)
+    {
+        return ACC_T_MEM;
+    }
 
     else
     {
@@ -117,6 +125,11 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
             printf("%s %s, [%u]\n", full_inst->instruct, full_inst->operand_1,
                                     full_inst->disp);
         } break;
+        case ACC_MEM:
+        {
+            printf("%s [%u], %s\n", full_inst->instruct, full_inst->disp,
+                                    full_inst->operand_2);
+        } break;
     }
     printf("\n");
 }
@@ -150,17 +163,15 @@ bool HandleByte_1(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->w_bit = (byte & 0b00001000) >> 3;
             bin_codes->reg_bits = (byte & 0b00000111);                    
         } break;
-/*
-        case XXX:
+        case MEM_T_ACC:
         {
-
+            strcpy(full_inst->operand_1, "AX\0");
         } break;
 
-        case XXX:
+        case ACC_T_MEM:
         {
-
+            strcpy(full_inst->operand_2, "AX\0");
         } break;
-*/
     }
     return is_last_byte;
 }
@@ -268,6 +279,16 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 // is_last_byte is already false
             }
         } break;
+
+        case MEM_T_ACC:
+        {
+            bin_codes->disp_lo = byte;
+        } break;
+
+        case ACC_T_MEM:
+        {
+            bin_codes->disp_lo = byte;
+        } break;
     }
     return is_last_byte;
 }
@@ -302,6 +323,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 }
             }
         } break;
+
         case IM_T_REGMEM:
         {
             if(bin_codes->mod_bits == MEM_MOD)
@@ -334,12 +356,31 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             }
 
         } break;
+
         case IM_T_REG:
         {
             bin_codes->data_hi = byte;
             SWORD output_value;
             output_value = (SWORD)Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
             HandleInst(full_inst, STR_INT, (int)output_value);
+            is_last_byte = true;
+        } break;
+
+        case MEM_T_ACC:
+        {
+            bin_codes->data_hi = byte;
+            full_inst->disp = (int16_t)Uint16FromBytes(bin_codes->disp_lo, bin_codes->disp_hi); 
+            // NOTE: notice we can just use DIR_ADD instruction format for this one
+            // since we are just doing a direct address move, bute to the accumulator
+            HandleInst(full_inst, DIR_ADD, 0);
+            is_last_byte = true;
+        } break;
+
+        case ACC_T_MEM:
+        {
+            bin_codes->data_hi = byte;
+            full_inst->disp = (int16_t)Uint16FromBytes(bin_codes->disp_lo, bin_codes->disp_hi);
+            HandleInst(full_inst, ACC_MEM, 0);
             is_last_byte = true;
         } break;
     }
@@ -464,6 +505,5 @@ bool HandleByte_6(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             is_last_byte = true;
         } break;
     }
- 
     return is_last_byte;
 }

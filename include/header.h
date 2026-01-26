@@ -99,6 +99,8 @@ typedef int16_t SWORD; // signed word
 #define EFDIS_IM_8  0x0A 
 #define EFDIS_IM_16 0x0B
 #define DIR_ADD     0x0C
+#define MEM_ACC     0x0D
+#define ACC_MEM     0x0E
 /////////////////////////////////
 // Structs
 /////////////////////////////////
