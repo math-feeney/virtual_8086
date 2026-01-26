@@ -98,6 +98,7 @@ typedef int16_t SWORD; // signed word
 #define DIS_IM_16   0x09
 #define EFDIS_IM_8  0x0A 
 #define EFDIS_IM_16 0x0B
+#define DIR_ADD     0x0C
 /////////////////////////////////
 // Structs
 /////////////////////////////////

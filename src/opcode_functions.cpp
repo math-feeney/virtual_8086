@@ -112,6 +112,11 @@ void HandleInst(asm_inst *full_inst, uint8_t format, int int_value)
             printf("%s [%s + %d], word %d\n", full_inst->instruct, full_inst->operand_1,
                                             full_inst->disp, full_inst->data);
         } break;
+        case DIR_ADD:
+        {
+            printf("%s %s, [%u]\n", full_inst->instruct, full_inst->operand_1,
+                                    full_inst->disp);
+        } break;
     }
     printf("\n");
 }
@@ -206,17 +211,27 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 GetReg_MOD00(full_inst, bin_codes);
             }
             // We are done if mod == 00 unless looking for direct address
-            if((bin_codes->mod_bits == MEM_MOD) && (bin_codes->rm_bits != 0b110))
+            if((bin_codes->mod_bits == MEM_MOD))
             {
-                bool is_src_add_calc = bin_codes->d_bit;
-                is_last_byte = true;
-                if(is_src_add_calc)
+                if (bin_codes->rm_bits != 0b110)
                 {
-                    HandleInst(full_inst, SRC_00, 0);
+                    bool is_src_add_calc = bin_codes->d_bit;
+                    is_last_byte = true;
+                    if(is_src_add_calc)
+                    {
+                        HandleInst(full_inst, SRC_00, 0);
+                    }
+                    else
+                    {
+                        HandleInst(full_inst, DES_00, 0);
+                    }
                 }
                 else
                 {
-                    HandleInst(full_inst, DES_00, 0);
+                    // nothing to do here I think,
+                    // but we know a 16-bit direct address displacement follows
+                    // TODO: We can probably just get rid of this else block
+                    // once we're sure we don't need it 
                 }
             }
 
@@ -353,11 +368,10 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                     HandleInst(full_inst, DES_DIS, 0);
                 }
             }
-            else if(bin_codes->mod_bits == 0b00)
+            else if(bin_codes->mod_bits == MEM_MOD)
             {
                 full_inst->disp = Uint16FromBytes(bin_codes->data_lo, bin_codes->data_hi);
-                printf("We still need to handle direct address\n");
-                // TODO: HANDLE DIRECT ADDRESS
+                HandleInst(full_inst, DIR_ADD, 0);
             }
             is_last_byte = true;
         } break;
