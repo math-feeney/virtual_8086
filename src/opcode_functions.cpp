@@ -251,7 +251,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
 
         case IM_T_REGMEM:
         {
-            // manual specifically mantions bytes 4,5,6 are 0
+            // manual specifically mentions bytes 4,5,6 are 0
             assert(!(byte & 0b00111000));
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->rm_bits = (byte & 0b00000111);

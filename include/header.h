@@ -32,12 +32,22 @@ typedef int16_t SWORD; // signed word
 #define MOV 0x01
 
 #define REGMEM_TF_REG 0x0101
-#define IM_T_REGMEM   0x0102
+#define IM_T_REGMEM   0x0002 // <- Note the first byte, we don't know whether MOV, ADD, etc
 #define IM_T_REG      0x0103
 #define MEM_T_ACC     0x0104
 #define ACC_T_MEM     0x0105
 #define REGMEM_T_SEG  0x0106
 #define SEG_T_REGMEM  0x0107
+
+#define ADD 0x02
+
+#define REGMEM_W_REG  0x0201
+// #define IM_T_REGMEM 0x0002 <- putting just for visual clarity
+#define IM_T_ACC      0x0203
+
+#define SUB 0x03
+
+#define CMP 0x04
 
 // PUSH instructions:
 #define PUSH 0x02
