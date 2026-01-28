@@ -3,6 +3,11 @@
 ## Log:
 (Scroll down for older entries)
 
+-- 2026-01-27 --
+- Trying to add decodes for ADD, SUB, CMP, turns out that immediate to register/memory versions 
+all have the same first byte as MOV, so I will need to figure out the best way to defer getting the rest of the
+opcode until byte 2
+
 -- 2026-01-23 --
 - It looks like in some cases the disp bytes in the instruction encoding table (table 4-12) are not included? 
 For example, in listing 40, the bytes 0xc60307 should decode to MV [BP + DI], byte 7. 7 is the data byte there, but the table seems to suggest there should be two disp bytes before that. 
