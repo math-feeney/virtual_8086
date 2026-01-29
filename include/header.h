@@ -32,7 +32,7 @@ typedef int16_t SWORD; // signed word
 #define MOV 0x01
 
 #define REGMEM_TF_REG 0x0101
-#define IM_T_REGMEM   0x0002 // <- Note the first byte, we don't know whether MOV, ADD, etc
+#define IM_T_REGMEM   0x0102
 #define IM_T_REG      0x0103
 #define MEM_T_ACC     0x0104
 #define ACC_T_MEM     0x0105
@@ -42,12 +42,21 @@ typedef int16_t SWORD; // signed word
 #define ADD 0x02
 
 #define REGMEM_W_REG  0x0201
-// #define IM_T_REGMEM 0x0002 <- putting just for visual clarity
+#define IM_T_RM_ASC 0x0002 // could be ADD/SUB/COMP
+  #define IM_T_ADD 0b000
 #define IM_T_ACC      0x0203
 
 #define SUB 0x03
 
+#define REGMEM_A_REG 0x0301
+// #define IM_T_RM_ASC 0x0002 <- just for visual reference
+  #define IM_F_SUB 0b101
+
 #define CMP 0x04
+
+#define REGMEM_A_REG 0x0401
+// #define IM_T_RM_ASC 0x0002 <- just for visual reference
+  #define IM_F_CMP 0b111
 
 // PUSH instructions:
 #define PUSH 0x02
@@ -120,6 +129,7 @@ struct bin_codes_t
 {
   uint8_t d_bit;
   uint8_t w_bit;
+  uint8_t s_bit;
   uint8_t mod_bits;
   uint8_t reg_bits;
   uint8_t rm_bits;

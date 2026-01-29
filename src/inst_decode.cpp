@@ -85,7 +85,12 @@ int main(int argc, char *argv[])
                     strcpy(full_inst.instruct, "PUSH\0");
                 } break;
                 
-                case 0: // START HERE: Figure out how to deal with immediate MOV, ADD, etc. since first byte identical
+                case 0: 
+                {
+                    // defer instruction until byte 2
+                    // NOTE: this will end up being handled inside
+                    // the HandleByte2() function, not out here
+                } break;
             }
             // if on the last byte, (return value of HandleByte),
             // then back to top of loop

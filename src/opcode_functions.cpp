@@ -163,6 +163,7 @@ bool HandleByte_1(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->w_bit = (byte & 0b00001000) >> 3;
             bin_codes->reg_bits = (byte & 0b00000111);                    
         } break;
+
         case MEM_T_ACC:
         {
             strcpy(full_inst->operand_1, "AX\0");
@@ -171,6 +172,12 @@ bool HandleByte_1(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
         case ACC_T_MEM:
         {
             strcpy(full_inst->operand_2, "AX\0");
+        } break;
+
+        case IM_T_RM_ASC:
+        {
+            bin_codes->s_bit = (byte & 0b00000010) >> 1;
+            bin_codes->w_bit = (byte & 0b00000001);
         } break;
     }
     return is_last_byte;
@@ -289,6 +296,31 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
         {
             bin_codes->disp_lo = byte;
         } break;
+
+        case IM_T_RM_ASC:
+        {
+            bin_codes->mod_bits = (byte & 0b11000000) >> 6;
+            bin_codes->rm_bits = (byte & 0b00000111);
+            uint8_t code = byte >> 3;
+            switch(code) // START HERE: the below isntructions should be good,
+                        // but figure out what to do for next byte
+            {
+                case IM_T_ADD:
+                {
+                    strcpy(full_inst->instruct, "ADD\0");
+                } break;
+
+                case IM_F_SUB:
+                {
+                    strcpy(full_inst->instruct, "SUB\0");
+                } break;
+
+                case IM_F_CMP:
+                {
+                    strcpy(full_inst->instruct, "CMP\0");
+                } break;
+            }
+        }
     }
     return is_last_byte;
 }
