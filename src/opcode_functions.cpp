@@ -42,6 +42,18 @@ uint16_t GetOpcode(uint8_t instruct)
     {
         return ACC_T_MEM;
     }
+    if((instruct & 0b11111100) == 0b00000000)
+    {
+        return REGMEM_W_REG_ADD;
+    }
+    if((instruct & 0b11111100) == 0b00101000)
+    {
+        return REGMEM_A_REG_SUB;
+    }
+    if((instruct & 0b11111100) == 0b00111000)
+    {
+        return REGMEM_A_REG_CMP;
+    }
 
     else
     {
@@ -179,6 +191,39 @@ bool HandleByte_1(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->s_bit = (byte & 0b00000010) >> 1;
             bin_codes->w_bit = (byte & 0b00000001);
         } break;
+
+        case REGMEM_W_REG_ADD:
+        {
+            bin_codes->d_bit = (byte & 0b00000010) >> 1;
+            bin_codes->w_bit = (byte & 0b00000001);
+        } break;
+
+        case REGMEM_A_REG_SUB:
+        {
+            bin_codes->d_bit = (byte & 0b00000010) >> 1;
+            bin_codes->w_bit = (byte & 0b00000001);
+        } break;
+
+        case REGMEM_A_REG_CMP:
+        {
+            bin_codes->d_bit = (byte & 0b00000010) >> 1;
+            bin_codes->w_bit = (byte & 0b00000001);
+        } break;
+
+        case IM_T_ACC_ADD:
+        {
+            bin_codes->w_bit = byte & 0b00000001;
+        } break;
+        
+        case IM_F_ACC_SUB:
+        {
+            bin_codes->w_bit = byte & 0b00000001;
+        } break;
+
+        case IM_W_ACC_CMP:
+        {
+            bin_codes->w_bit = byte & 0b00000001;
+        } break;
     }
     return is_last_byte;
 }
@@ -304,6 +349,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             uint8_t code = byte >> 3;
             switch(code) // START HERE: the below isntructions should be good,
                         // but figure out what to do for next byte
+                        // ALSO: deal with IM_T_ACC instructions
             {
                 case IM_T_ADD:
                 {
@@ -315,12 +361,33 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                     strcpy(full_inst->instruct, "SUB\0");
                 } break;
 
-                case IM_F_CMP:
+                case IM_W_CMP:
                 {
                     strcpy(full_inst->instruct, "CMP\0");
                 } break;
             }
         }
+
+        case REGMEM_W_REG_ADD:
+        {
+            bin_codes->mod_bits = (byte & 0b11000000) >> 6;
+            bin_codes->reg_bits = (byte & 0b00111000) >> 3;
+            bin_codes->rm_bits = (byte & 0b00000111);
+        } break;
+
+        case REGMEM_A_REG_SUB:
+        {
+            bin_codes->mod_bits = (byte & 0b11000000) >> 6;
+            bin_codes->reg_bits = (byte & 0b00111000) >> 3;
+            bin_codes->rm_bits = (byte & 0b00000111);
+        } break;
+
+        case REGMEM_A_REG_CMP:
+        {
+            bin_codes->mod_bits = (byte & 0b11000000) >> 6;
+            bin_codes->reg_bits = (byte & 0b00111000) >> 3;
+            bin_codes->rm_bits = (byte & 0b00000111);
+        } break;
     }
     return is_last_byte;
 }

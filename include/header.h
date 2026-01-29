@@ -41,22 +41,24 @@ typedef int16_t SWORD; // signed word
 
 #define ADD 0x02
 
-#define REGMEM_W_REG  0x0201
+#define REGMEM_W_REG_ADD  0x0201
 #define IM_T_RM_ASC 0x0002 // could be ADD/SUB/COMP
   #define IM_T_ADD 0b000
-#define IM_T_ACC      0x0203
+#define IM_T_ACC_ADD      0x0203
 
 #define SUB 0x03
 
-#define REGMEM_A_REG 0x0301
+#define REGMEM_A_REG_SUB 0x0301
 // #define IM_T_RM_ASC 0x0002 <- just for visual reference
   #define IM_F_SUB 0b101
+#define IM_F_ACC_SUB 0x303
 
 #define CMP 0x04
 
-#define REGMEM_A_REG 0x0401
+#define REGMEM_A_REG_CMP 0x0401
 // #define IM_T_RM_ASC 0x0002 <- just for visual reference
-  #define IM_F_CMP 0b111
+  #define IM_W_CMP 0b111
+#define IM_W_ACC_CMP 0x403
 
 // PUSH instructions:
 #define PUSH 0x02
