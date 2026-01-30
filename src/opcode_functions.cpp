@@ -243,24 +243,8 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             // d == 1: dest is specified in REG field
             if(bin_codes->mod_bits == REG_MOD)
             {
-                if(bin_codes->d_bit)
-                {
-                    bin_codes->dest_bits = bin_codes->reg_bits;
-                    bin_codes->src_bits = bin_codes->rm_bits;
-                }
-                else
-                {
-                    bin_codes->dest_bits = bin_codes->reg_bits;
 
-                    bin_codes->src_bits = bin_codes->rm_bits;
-                }
-
-                // TODO: this might actually be more generalizable
-                // to other instructions types
-                uint8_t src_field = bin_codes->src_bits;
-                uint8_t dest_field = bin_codes->dest_bits;
-
-                RR_GetReg(full_inst, src_field, dest_field, bin_codes->w_bit); 
+                RR_GetReg(full_inst, bin_codes); 
 
                 // Register mode tells us this is the last byte
                 // TODO: will want to move this to an outside function 
@@ -347,9 +331,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->rm_bits = (byte & 0b00000111);
             uint8_t code = byte >> 3;
-            switch(code) // START HERE: the below isntructions should be good,
-                        // but figure out what to do for next byte
-                        // ALSO: deal with IM_T_ACC instructions
+            switch(code) 
             {
                 case IM_T_ADD:
                 {
@@ -373,6 +355,13 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
             bin_codes->rm_bits = (byte & 0b00000111);
+
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                RR_GetReg(full_inst, bin_codes);
+                HandleInst(full_inst, STR_STR, 0);
+                is_last_byte = true;
+            }
         } break;
 
         case REGMEM_A_REG_SUB:

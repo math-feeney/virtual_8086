@@ -15,8 +15,25 @@
 
 // Set operands in a Register-to-Register MOV, so both are registers
 // *Assumes MOD field is 0b11
-void RR_GetReg(asm_inst* full_inst, uint8_t src_field, uint8_t dest_field, bool is_w) 
+void RR_GetReg(asm_inst* full_inst, bin_codes_t* bin_codes) 
 {
+    bool is_w = bin_codes->w_bit;
+
+    if(bin_codes->d_bit)
+    {
+        bin_codes->dest_bits = bin_codes->reg_bits;
+        bin_codes->src_bits = bin_codes->rm_bits;
+    }
+    else
+    {
+        bin_codes->dest_bits = bin_codes->reg_bits;
+
+        bin_codes->src_bits = bin_codes->rm_bits;
+    }
+
+    uint8_t dest_field = bin_codes->dest_bits;
+    uint8_t src_field = bin_codes->src_bits;
+
     if(is_w)
     {
         switch(dest_field)

@@ -6,7 +6,7 @@
 // Register to Resister functions //////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 void assert(bool is_true);
-void RR_GetReg(asm_inst* full_inst, uint8_t src_field, uint8_t dest_field, bool is_w); 
+void RR_GetReg(asm_inst* full_inst, bin_codes_t* bin_codes); 
 void R_GetReg(asm_inst *full_inst, uint8_t reg_field, bool is_w, bool is_dest);
 void GetReg_MOD00(asm_inst *full_inst, bin_codes_t *bin_codes);
 void GetReg_IM_T_REGMEM(asm_inst *full_inst, bin_codes_t *bin_codes); 
