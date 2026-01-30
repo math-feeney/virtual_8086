@@ -3,6 +3,12 @@
 ## Log:
 (Scroll down for older entries)
 
+-- 2026-01-29 --
+- Looks like I was able to generalize the RR_GetReg() function to other compatible instructions such as ADD.
+- I also modifies the parameters to take pointers to full_inst and bin_codes, since all the information
+that we need is there. Now we can use that same function for multiple different opcodes, because the info for the instruction 
+is already retrieved, and we can use the same process to get the operands.
+
 -- 2026-01-27 --
 - Trying to add decodes for ADD, SUB, CMP, turns out that immediate to register/memory versions 
 all have the same first byte as MOV, so I will need to figure out the best way to defer getting the rest of the
