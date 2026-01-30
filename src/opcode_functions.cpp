@@ -364,7 +364,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             }
         } break;
 
-        case REGMEM_A_REG_SUB:
+        case REGMEM_A_REG_SUB: // START HERE, probably same process as the ADD above ///////
         {
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
