@@ -359,7 +359,8 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             if(bin_codes->mod_bits == MEM_MOD)
             {
                 if (bin_codes->rm_bits != 0b110)
-                {
+                { //START HERE, can't get operands to print ////////////
+                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
                     bool is_src_add_calc = bin_codes->d_bit;
                     is_last_byte = true;
                     if(is_src_add_calc)
@@ -439,6 +440,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 int8_t signed_byte = (int8_t)byte;
                 full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
+                GetReg_IM_T_REGMEM(full_inst, bin_codes);
                 if(is_src_add_calc)
                 {
                     HandleInst(full_inst, SRC_DIS, 0);
@@ -519,6 +521,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 int8_t signed_byte = (int8_t)byte;
                 full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
+                GetReg_MOD00(full_inst, bin_codes);
                 if(is_src_add_calc)
                 {
                     HandleInst(full_inst, SRC_DIS, 0);
