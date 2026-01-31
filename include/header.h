@@ -60,10 +60,6 @@ typedef int16_t SWORD; // signed word
   #define IM_W_CMP 0b111
 #define IM_W_ACC_CMP 0x403
 
-// PUSH instructions:
-#define PUSH 0x02
-
-#define P_REGMEM 0x0201
 // ADD MORE HERE ///////////
 
 // Macros for MOD field
