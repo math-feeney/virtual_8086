@@ -49,6 +49,11 @@ int main(int argc, char *argv[])
         uint8_t bin_codes_t.rm_bits;
         uint8_t bin_codes_t.src_bits;
         uint8_t bin_codes_t.dest_bits;
+        uint8_t dest_bits;
+        uint8_t disp_lo;
+        uint8_t disp_hi;
+        uint8_t data_lo;
+        uint8_t data_hi;
        */ 
         ////////////////////////////////////
 

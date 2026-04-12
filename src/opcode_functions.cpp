@@ -250,9 +250,8 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 }
                 else
                 {
-                    bin_codes->dest_bits = bin_codes->reg_bits;
-
-                    bin_codes->src_bits = bin_codes->rm_bits;
+                    bin_codes->src_bits = bin_codes->reg_bits;
+                    bin_codes->dest_bits = bin_codes->rm_bits;
                 }
 
                 // TODO: this might actually be more generalizable
@@ -271,7 +270,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             }
             else // if mod_bits are 00, 01, or 10 
             {
-                GetReg_MOD00(full_inst, bin_codes);
+                GetReg_MOD00(full_inst, *bin_codes);
             }
             // We are done if mod == 00 unless looking for direct address
             if((bin_codes->mod_bits == MEM_MOD))
@@ -431,7 +430,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 if(!bin_codes->w_bit)
                 {
                     full_inst->data = (int16_t)bin_codes->data_lo;
-                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                     HandleInst(full_inst, DIS_IM_8, 0);
                     is_last_byte = true;
                 }
@@ -521,7 +520,7 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             {
                 bin_codes->data_hi = byte;
                 full_inst->data = ((int16_t)bin_codes->data_hi << 8) | ((int16_t)bin_codes->data_lo);
-                GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                 HandleInst(full_inst, DIS_IM_16, 0);
                 is_last_byte = true;
             }
@@ -531,7 +530,7 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 if(!bin_codes->w_bit)
                 {
                     full_inst->data = (int16_t)bin_codes->data_lo;
-                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                     HandleInst(full_inst, EFDIS_IM_8, 0);
                     is_last_byte = true;
                 }
@@ -561,7 +560,7 @@ bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 {
                     bin_codes->data_hi = byte;
                     full_inst->data = ((int16_t)bin_codes->data_hi << 8) |  ((int16_t)bin_codes->data_lo);
-                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                     HandleInst(full_inst, DIS_IM_8, 0);
                 }
 
@@ -572,7 +571,7 @@ bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 if(!bin_codes->w_bit)
                 {
                     full_inst->data = (int16_t)bin_codes->data_lo;
-                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                     HandleInst(full_inst, EFDIS_IM_16, 0);
                     is_last_byte = true;
                 }
@@ -599,7 +598,7 @@ bool HandleByte_6(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             assert(bin_codes->w_bit);
             bin_codes->data_hi = byte;
             full_inst->data = ((int16_t)bin_codes->data_hi << 8) |  ((int16_t)bin_codes->data_lo);
-            GetReg_IM_T_REGMEM(full_inst, bin_codes);
+            GetReg_IM_T_REGMEM(full_inst, *bin_codes);
             HandleInst(full_inst, EFDIS_IM_16, 0);
             is_last_byte = true;
         } break;
