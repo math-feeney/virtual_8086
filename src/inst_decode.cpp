@@ -85,11 +85,10 @@ int main(int argc, char *argv[])
                     strcpy(full_inst.instruct, "MOV\0"); 
                 } break;
 
-                case PUSH:
+                case ADD:
                 {
-                    strcpy(full_inst.instruct, "PUSH\0");
+                    strcpy(full_inst.instruct, "ADD\0");
                 } break;
-                
                 case 0: 
                 {
                     // defer instruction until byte 2

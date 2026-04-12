@@ -1,5 +1,6 @@
 listing_0037_single_register_mov
 listing_0037_single_register_mov.asm
+listing_*
 test_input.txt
 *register_mov*
 .vscode/

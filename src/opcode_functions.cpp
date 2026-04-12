@@ -346,9 +346,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->rm_bits = (byte & 0b00000111);
             uint8_t code = byte >> 3;
-            switch(code) // START HERE: the below isntructions should be good,
-                        // but figure out what to do for next byte
-                        // ALSO: deal with IM_T_ACC instructions
+            switch(code) 
             {
                 case IM_T_ADD:
                 {
@@ -372,13 +370,52 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
             bin_codes->rm_bits = (byte & 0b00000111);
+
+            if(bin_codes->mod_bits == MEM_MOD)
+            {
+                if (bin_codes->rm_bits != 0b110)
+                { //START HERE, can't get operands to print ////////////
+                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    bool is_src_add_calc = bin_codes->d_bit;
+                    is_last_byte = true;
+                    if(is_src_add_calc)
+                    {
+                        HandleInst(full_inst, SRC_00, 0);
+                    }
+                    else
+                    {
+                        HandleInst(full_inst, DES_00, 0);
+                    }
+                }
+                else
+                {
+                    // nothing to do here I think,
+                    // but we know a 16-bit direct address displacement follows
+                    // TODO: We can probably just get rid of this else block
+                    // once we're sure we don't need it 
+                }
+            }
+
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                RR_GetReg(full_inst, bin_codes);
+                HandleInst(full_inst, STR_STR, 0);
+                is_last_byte = true;
+            }
         } break;
 
-        case REGMEM_A_REG_SUB:
+        case REGMEM_A_REG_SUB: 
         {
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
             bin_codes->rm_bits = (byte & 0b00000111);
+
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                RR_GetReg(full_inst, bin_codes);
+                HandleInst(full_inst, STR_STR, 0);
+                is_last_byte = true;
+            }
         } break;
 
         case REGMEM_A_REG_CMP:
@@ -386,6 +423,13 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
             bin_codes->rm_bits = (byte & 0b00000111);
+
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                RR_GetReg(full_inst, bin_codes);
+                HandleInst(full_inst, STR_STR, 0);
+                is_last_byte = true;
+            }
         } break;
     }
     return is_last_byte;
@@ -411,6 +455,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 int8_t signed_byte = (int8_t)byte;
                 full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
+                GetReg_IM_T_REGMEM(full_inst, bin_codes);
                 if(is_src_add_calc)
                 {
                     HandleInst(full_inst, SRC_DIS, 0);
@@ -480,6 +525,27 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             full_inst->disp = (int16_t)Uint16FromBytes(bin_codes->disp_lo, bin_codes->disp_hi);
             HandleInst(full_inst, ACC_MEM, 0);
             is_last_byte = true;
+        } break;
+
+        case REGMEM_W_REG_ADD:
+        {
+            bin_codes->disp_lo = byte;
+            if(bin_codes->mod_bits == MEM_MOD_8)
+            {
+                bool is_src_add_calc = bin_codes->d_bit;
+                int8_t signed_byte = (int8_t)byte;
+                full_inst->disp = (int16_t)signed_byte;
+                is_last_byte = true;
+                GetReg_MOD00(full_inst, bin_codes);
+                if(is_src_add_calc)
+                {
+                    HandleInst(full_inst, SRC_DIS, 0);
+                }
+                else
+                {
+                    HandleInst(full_inst, DES_DIS, 0);
+                }
+            }
         } break;
     }
     return is_last_byte;
