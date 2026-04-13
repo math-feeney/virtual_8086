@@ -250,8 +250,9 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 }
                 else
                 {
-                    bin_codes->src_bits = bin_codes->reg_bits;
-                    bin_codes->dest_bits = bin_codes->rm_bits;
+                    bin_codes->dest_bits = bin_codes->reg_bits;
+
+                    bin_codes->src_bits = bin_codes->rm_bits;
                 }
 
                 // TODO: this might actually be more generalizable
@@ -259,7 +260,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 uint8_t src_field = bin_codes->src_bits;
                 uint8_t dest_field = bin_codes->dest_bits;
 
-                RR_GetReg(full_inst, src_field, dest_field, bin_codes->w_bit); 
+                RR_GetReg(full_inst, bin_codes); 
 
                 // Register mode tells us this is the last byte
                 // TODO: will want to move this to an outside function 
@@ -375,7 +376,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             {
                 if (bin_codes->rm_bits != 0b110)
                 { //START HERE, can't get operands to print ////////////
-                    GetReg_IM_T_REGMEM(full_inst, bin_codes);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
                     bool is_src_add_calc = bin_codes->d_bit;
                     is_last_byte = true;
                     if(is_src_add_calc)
@@ -455,7 +456,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 int8_t signed_byte = (int8_t)byte;
                 full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
-                GetReg_IM_T_REGMEM(full_inst, bin_codes);
+
                 if(is_src_add_calc)
                 {
                     HandleInst(full_inst, SRC_DIS, 0);
@@ -536,7 +537,7 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 int8_t signed_byte = (int8_t)byte;
                 full_inst->disp = (int16_t)signed_byte;
                 is_last_byte = true;
-                GetReg_MOD00(full_inst, bin_codes);
+                GetReg_MOD00(full_inst, *bin_codes);
                 if(is_src_add_calc)
                 {
                     HandleInst(full_inst, SRC_DIS, 0);

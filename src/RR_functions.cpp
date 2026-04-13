@@ -26,9 +26,8 @@ void RR_GetReg(asm_inst* full_inst, bin_codes_t* bin_codes)
     }
     else
     {
-        bin_codes->dest_bits = bin_codes->reg_bits;
-
-        bin_codes->src_bits = bin_codes->rm_bits;
+        bin_codes->dest_bits = bin_codes->rm_bits;
+        bin_codes->src_bits = bin_codes->reg_bits;
     }
 
     uint8_t dest_field = bin_codes->dest_bits;
