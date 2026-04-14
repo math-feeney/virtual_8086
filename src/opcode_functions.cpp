@@ -372,10 +372,22 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             bin_codes->reg_bits = (byte & 0b00111000) >> 3;
             bin_codes->rm_bits = (byte & 0b00000111);
 
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                RR_GetReg(full_inst, bin_codes);
+                HandleInst(full_inst, STR_STR, 0);
+                is_last_byte = true;
+            }
+
+            else
+            {
+                GetReg_MOD00(full_inst, *bin_codes);
+            }
+
             if(bin_codes->mod_bits == MEM_MOD)
             {
                 if (bin_codes->rm_bits != 0b110)
-                { //START HERE, can't get operands to print ////////////
+                { 
                     GetReg_MOD00(full_inst, *bin_codes);
                     bool is_src_add_calc = bin_codes->d_bit;
                     is_last_byte = true;
@@ -395,14 +407,8 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                     // TODO: We can probably just get rid of this else block
                     // once we're sure we don't need it 
                 }
-            }
+            } 
 
-            if(bin_codes->mod_bits == REG_MOD)
-            {
-                RR_GetReg(full_inst, bin_codes);
-                HandleInst(full_inst, STR_STR, 0);
-                is_last_byte = true;
-            }
         } break;
 
         case REGMEM_A_REG_SUB: 

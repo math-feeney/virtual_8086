@@ -42,6 +42,7 @@ typedef int16_t SWORD; // signed word
 #define ADD 0x02
 
 #define REGMEM_W_REG_ADD  0x0201
+// START HERE: just need to figure out how to account for the multiple possibly instructions/////////////////////////////////
 #define IM_T_RM_ASC 0x0002 // could be ADD/SUB/COMP
   #define IM_T_ADD 0b000
 #define IM_T_ACC_ADD      0x0203
