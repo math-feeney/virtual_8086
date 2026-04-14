@@ -18,7 +18,7 @@ void assert(bool is_true)
 // SEE: internal lookup table in "header.h"
 
 // e.g.:
-// 0x0102 -> 01 indicates "MOV", 0102 indicates REGMEM_TF_REG
+// 0x0102 -> 01 indicates "MOV", 0102 indicates IM_T_REGMEM
 
 uint16_t GetOpcode(uint8_t instruct)
 {
@@ -376,7 +376,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
             {
                 if (bin_codes->rm_bits != 0b110)
                 { //START HERE, can't get operands to print ////////////
-                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
+                    GetReg_MOD00(full_inst, *bin_codes);
                     bool is_src_add_calc = bin_codes->d_bit;
                     is_last_byte = true;
                     if(is_src_add_calc)
