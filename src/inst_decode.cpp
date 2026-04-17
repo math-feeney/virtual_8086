@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     *//////////////////////////////////////////
     
     BYTE byte;
-    asm_inst full_inst;
+    asm_inst full_inst = {};
   
     // Get file descriptor for linux
     // TODO: figure out how to make portable
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
                 {
                     strcpy(full_inst.instruct, "ADD\0");
                 } break;
-                case 0: 
+                case 0: // instruction not known in byte 1
                 {
                     // defer instruction until byte 2
                     // NOTE: this will end up being handled inside

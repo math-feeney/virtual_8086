@@ -54,7 +54,10 @@ uint16_t GetOpcode(uint8_t instruct)
     {
         return REGMEM_A_REG_CMP;
     }
-
+    if((instruct & 0b11111100) == 0b10000000)
+    {
+        return IM_T_RM_ASC;
+    }
     else
     {
         //return 0 if can't find opcode
@@ -62,12 +65,17 @@ uint16_t GetOpcode(uint8_t instruct)
     }
 }
 
-// get a 16-bite unsigend integer from 2 separate bytes
+// get a 16-bit unsigned integer from 2 separate bytes
 uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte)
 {
     return (uint16_t)lo_byte | ((uint16_t)hi_byte << 8);
 }
 
+// sign extend an 8-bit to a 16-bit
+int16_t SignExtend_8_to_16(uint8_t byte)
+{
+    return(int16_t(int8_t(byte)));
+}
 
 
 //////////////////////////////////////////
@@ -346,7 +354,7 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
         {
             bin_codes->mod_bits = (byte & 0b11000000) >> 6;
             bin_codes->rm_bits = (byte & 0b00000111);
-            uint8_t code = byte >> 3;
+            uint8_t code = (byte & 0b00111000) >> 3;
             switch(code) 
             {
                 case IM_T_ADD:
@@ -363,8 +371,10 @@ bool HandleByte_2(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 {
                     strcpy(full_inst->instruct, "CMP\0");
                 } break;
+
+                printf("DEBUG shouldn't have gotten here");
             }
-        }
+        } break; // TODO: opcode seems to be an unexpected value here, maybe look into
 
         case REGMEM_W_REG_ADD:
         {
@@ -554,6 +564,35 @@ bool HandleByte_3(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 }
             }
         } break;
+
+        case IM_T_RM_ASC:
+        {
+            if(bin_codes->mod_bits == MEM_MOD)
+            {
+
+            }
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                bin_codes->data_lo = byte;
+                if(!bin_codes->w_bit)
+                {
+                    // SEE IF THIS WORKS
+                    full_inst->data = (int16_t)bin_codes->data_lo;
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
+                    HandleInst(full_inst, STR_INT, 0);
+                    is_last_byte = true;
+                }
+                else
+                {
+                    // then I think we have an 8-bit immediate value
+                    // that's sign extended to 16-bit?
+                    full_inst->data = SignExtend_8_to_16(bin_codes->data_lo);
+                    GetReg_IM_T_REGMEM(full_inst, *bin_codes);
+                    HandleInst(full_inst, STR_INT, full_inst->data);
+                    is_last_byte = true;
+                }
+            }
+        }
     }
     return is_last_byte;
 }
@@ -615,6 +654,17 @@ bool HandleByte_4(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 full_inst->disp = ((int16_t)bin_codes->disp_hi << 8 | ((int16_t)bin_codes->disp_lo));
             }
         } break;
+        case IM_T_RM_ASC:
+        {
+            if(bin_codes->mod_bits == REG_MOD)
+            {
+                bin_codes->data_hi = byte;
+                full_inst->data = ((int16_t)bin_codes->data_hi << 8) | ((int16_t)bin_codes->data_lo);
+                GetReg_IM_T_REGMEM(full_inst, *bin_codes);
+                HandleInst(full_inst, DIS_IM_16, 0);
+                is_last_byte = true;
+            }
+        }
     }
     return is_last_byte;
 }
@@ -650,7 +700,11 @@ bool HandleByte_5(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, 
                 }
                 else
                 {
-                    // nothing to do I think
+                    if(bin_codes->s_bit)
+                    {
+                        // then we have an 8-bit sign extended to 16 i think?
+
+                    }
                 }
             }
         } break;

@@ -12,6 +12,7 @@ void GetReg_MOD00(asm_inst *full_inst, bin_codes_t bin_codes);
 void GetReg_IM_T_REGMEM(asm_inst *full_inst, bin_codes_t bin_codes); 
 uint16_t GetOpcode(uint8_t instruct);
 uint16_t Uint16FromBytes(uint8_t lo_byte, uint8_t hi_byte);
+int16_t SignExtend_8_to_16(uint8_t byte);
 
 void HandleInst(asm_inst *full_inst);
 bool HandleByte_1(asm_inst *full_inst, bin_codes_t *bin_codes, uint16_t opcode, uint8_t byte);
